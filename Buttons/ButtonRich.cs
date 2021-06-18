@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-namespace Build1.UIComponents.Buttons
+namespace Build1.UnityUIComponents.Buttons
 {
     public sealed class ButtonRich : Button
     {

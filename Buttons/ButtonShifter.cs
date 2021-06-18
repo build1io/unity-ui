@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Build1.UIComponents.Buttons
+namespace Build1.UnityUIComponents.Buttons
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Button))]
