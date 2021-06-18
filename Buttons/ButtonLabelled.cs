@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-namespace Build1.UnityUIComponents.Buttons
+namespace Build1.UnityUI.Buttons
 {
     [RequireComponent(typeof(Image))]
     public sealed class ButtonLabelled : Button

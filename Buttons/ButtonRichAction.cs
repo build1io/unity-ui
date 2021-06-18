@@ -1,4 +1,4 @@
-namespace Build1.UnityUIComponents.Buttons
+namespace Build1.UnityUI.Buttons
 {
     public enum ButtonRichAction
     {
