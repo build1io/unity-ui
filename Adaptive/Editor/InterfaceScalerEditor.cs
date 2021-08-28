@@ -82,12 +82,15 @@ namespace Build1.UnityUI.Adaptive.Editor
                     if (EGUI.Button("+", 30, 25, new RectOffset(1, 1, 0, 2)))
                         ArrayUtility.Add(ref targetObject.items, InterfaceScalerItem.New(null));
                 });
-            
-                if (propertiesChanged)
-                    targetObject.SendMessage("OnValidate", null, SendMessageOptions.DontRequireReceiver);
             });
-
+            
             serializedObject.ApplyModifiedProperties();
+            
+            if (propertiesChanged)
+            {
+                targetObject.SendMessage("OnValidate", null, SendMessageOptions.DontRequireReceiver);
+                EditorUtility.SetDirty(targetObject);
+            }
         }
     }
 }

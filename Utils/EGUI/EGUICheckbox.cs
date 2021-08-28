@@ -17,6 +17,13 @@ namespace Build1.UnityUI.Utils.EGUI
             value = GUILayout.Toggle(value, $" {label}");
         }
 
+        public static void Checkbox(bool value, Action<bool> onChanged)
+        {
+            var newValue = GUILayout.Toggle(value, string.Empty);
+            if (newValue != value)
+                onChanged?.Invoke(newValue);
+        }
+        
         public static void Checkbox(string label, bool value, Action<bool> onChanged)
         {
             var newValue = GUILayout.Toggle(value, $" {label}");

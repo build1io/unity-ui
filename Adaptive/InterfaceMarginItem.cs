@@ -23,7 +23,7 @@ namespace Build1.UnityUI.Adaptive
             };
 
             var interfaceTypes = Enum.GetValues(typeof(InterfaceType)).Cast<InterfaceType>();
-            item.items = interfaceTypes.Select(InterfaceMarginSubItem.New).ToArray();
+            item.items = interfaceTypes.Select(i => InterfaceMarginSubItem.New(i, rectTransform)).ToArray();
             return item;
         }
     }

@@ -14,13 +14,15 @@ namespace Build1.UnityUI.Adaptive
          * Static.
          */
 
-        public static InterfaceMarginSubItem New(InterfaceType interfaceType)
+        public static InterfaceMarginSubItem New(InterfaceType interfaceType, RectTransform rectTransform)
         {
             var item = new InterfaceMarginSubItem
             {
                 interfaceType = interfaceType,
-                padding = new RectOffset()
+                padding = new RectOffset((int)rectTransform.offsetMin.x, -(int)rectTransform.offsetMax.x, -(int)rectTransform.offsetMax.y, (int)rectTransform.offsetMin.y)
             };
+            
+            
             return item;
         }
     }

@@ -35,12 +35,12 @@ namespace Build1.UnityUI.Adaptive.Editor
             {
                 EGUI.Horizontally(() =>
                 {
-                    EGUI.Label("Game Object");
-                    EGUI.Label("Interface", 75);
-                    EGUI.Label("Left", 80);
-                    EGUI.Label("Right", 80);
-                    EGUI.Label("Top", 80);
-                    EGUI.Label("Bottom", 80);
+                    EGUI.Label("Rect Transform");
+                    EGUI.Label(" Interface", 75);
+                    EGUI.Label("Left", 60);
+                    EGUI.Label("Right", 60);
+                    EGUI.Label("Top", 60);
+                    EGUI.Label("Bottom", 60);
                     EGUI.Label(string.Empty, 30);
                 });
                 EGUI.Space(2);
@@ -67,25 +67,25 @@ namespace Build1.UnityUI.Adaptive.Editor
                                 {
                                     EGUI.Label(subItem.interfaceType.ToString(), 75);
                                     
-                                    EGUI.IntField(subItem.padding.left, 80, left =>
+                                    EGUI.IntField(subItem.padding.left, 60, left =>
                                     {
                                         subItem.padding.left = left;
                                         propertiesChanged = true;
                                     });
                                     
-                                    EGUI.IntField(subItem.padding.right, 80, right =>
+                                    EGUI.IntField(subItem.padding.right, 60, right =>
                                     {
                                         subItem.padding.right = right;
                                         propertiesChanged = true;
                                     });
                                     
-                                    EGUI.IntField(subItem.padding.top, 80, top =>
+                                    EGUI.IntField(subItem.padding.top, 60, top =>
                                     {
                                         subItem.padding.top = top;
                                         propertiesChanged = true;
                                     });
                                     
-                                    EGUI.IntField(subItem.padding.bottom, 80, bottom =>
+                                    EGUI.IntField(subItem.padding.bottom, 60, bottom =>
                                     {
                                         subItem.padding.bottom = bottom;
                                         propertiesChanged = true;
@@ -107,11 +107,16 @@ namespace Build1.UnityUI.Adaptive.Editor
                         ArrayUtility.Add(ref targetObject.items, InterfaceMarginItem.New(null));
                 });
             
-                if (propertiesChanged)
-                    targetObject.SendMessage("OnValidate", null, SendMessageOptions.DontRequireReceiver);
+                
             });
 
             serializedObject.ApplyModifiedProperties();
+            
+            if (propertiesChanged)
+            {
+                targetObject.SendMessage("OnValidate", null, SendMessageOptions.DontRequireReceiver);
+                EditorUtility.SetDirty(targetObject);
+            }
         }
         
     }

@@ -77,11 +77,16 @@ namespace Build1.UnityUI.Adaptive.Editor
                         ArrayUtility.Add(ref targetObject.items, InterfaceActivatorItem.New(null));
                 });
 
-                if (propertiesChanged)
-                    targetObject.SendMessage("OnValidate", null, SendMessageOptions.DontRequireReceiver);
+                
             });
 
             serializedObject.ApplyModifiedProperties();
+            
+            if (propertiesChanged)
+            {
+                targetObject.SendMessage("OnValidate", null, SendMessageOptions.DontRequireReceiver);
+                EditorUtility.SetDirty(targetObject);
+            }
         }
     }
 }
