@@ -82,6 +82,13 @@ namespace Build1.UnityUI.Utils.EGUI
          * Numeric Fields.
          */
         
+        public static void IntField(int value, Action<int> onChanged)
+        {
+            var valueNew = EditorGUILayout.IntField(value);
+            if (valueNew != value)
+                onChanged?.Invoke(valueNew);
+        }
+        
         public static void IntField(int value, int width, Action<int> onChanged)
         {
             var valueNew = EditorGUILayout.IntField(value, GUILayout.Width(width));
