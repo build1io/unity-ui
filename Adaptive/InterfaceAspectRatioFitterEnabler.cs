@@ -14,6 +14,7 @@ namespace Build1.UnityUI.Adaptive
         [SerializeField] public AspectRatioFitter aspectRatioFitter;
         [SerializeField] public RectTransform     rectTransform;
         [SerializeField] public InterfaceType     interfaceType;
+        [SerializeField] public bool              stretch = true;
         [SerializeField] public bool              resetOffsetsWhenAspectRationFitterDisabled = true;
 
         private bool CanUpdate => aspectRatioFitter != null && rectTransform != null;
@@ -83,6 +84,13 @@ namespace Build1.UnityUI.Adaptive
         private void UpdateAspectRatioFitterImpl(InterfaceType currentInterfaceType)
         {
             aspectRatioFitter.enabled = (interfaceType & currentInterfaceType) == currentInterfaceType;
+
+            if (stretch)
+            {
+                rectTransform.anchorMin = new Vector2(0, 0);
+                rectTransform.anchorMax = new Vector2(1, 1);
+            }
+
             if (!aspectRatioFitter.enabled && resetOffsetsWhenAspectRationFitterDisabled)
             {
                 rectTransform.offsetMin = Vector2.zero;

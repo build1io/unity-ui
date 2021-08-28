@@ -30,6 +30,16 @@ namespace Build1.UnityUI.Adaptive.Editor
 
             EGUI.Horizontally(() =>
             {
+                EGUI.Label("Stretch", 200);
+                EGUI.Checkbox(targetObject.stretch, valueNew =>
+                {
+                    targetObject.stretch = valueNew;
+                    propertiesChanged = true;
+                });    
+            });
+            
+            EGUI.Horizontally(() =>
+            {
                 EGUI.Label("Reset offsets when ARF disabled", 200);
                 EGUI.Checkbox(targetObject.resetOffsetsWhenAspectRationFitterDisabled, valueNew =>
                 {
