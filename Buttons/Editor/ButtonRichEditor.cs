@@ -3,7 +3,7 @@
 using UnityEditor;
 using UnityEditor.UI;
 
-namespace Build1.UnityUI.Buttons
+namespace Build1.UnityUI.Buttons.Editor
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(ButtonRich), true)]

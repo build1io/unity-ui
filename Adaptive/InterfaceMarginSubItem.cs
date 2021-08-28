@@ -16,14 +16,16 @@ namespace Build1.UnityUI.Adaptive
 
         public static InterfaceMarginSubItem New(InterfaceType interfaceType, RectTransform rectTransform)
         {
-            var item = new InterfaceMarginSubItem
+            return new InterfaceMarginSubItem
             {
                 interfaceType = interfaceType,
-                padding = new RectOffset((int)rectTransform.offsetMin.x, -(int)rectTransform.offsetMax.x, -(int)rectTransform.offsetMax.y, (int)rectTransform.offsetMin.y)
+                padding = rectTransform == null
+                              ? new RectOffset()
+                              : new RectOffset((int)rectTransform.offsetMin.x,
+                                               -(int)rectTransform.offsetMax.x,
+                                               -(int)rectTransform.offsetMax.y,
+                                               (int)rectTransform.offsetMin.y),
             };
-            
-            
-            return item;
         }
     }
 }

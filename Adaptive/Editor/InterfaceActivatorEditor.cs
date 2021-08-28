@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 
+using System.Linq;
 using Build1.UnityUI.Utils;
 using Build1.UnityUI.Utils.EGUI;
 using Build1.UnityUI.Utils.EGUI.RenderModes;
@@ -25,9 +26,12 @@ namespace Build1.UnityUI.Adaptive.Editor
             var targetObject = (InterfaceActivator)serializedObject.targetObject;
             var propertiesChanged = false;
 
-            EGUI.Space(3);
-            EGUI.MessageBox("Making object controlling itself might result in unexpected behavior.", MessageType.Warning);
-            EGUI.Space(5);
+            if (targetObject.items.FirstOrDefault(i => i.gameObject == targetObject.gameObject) != null)
+            {
+                EGUI.Space(3);
+                EGUI.MessageBox("Making object controlling itself might result in unexpected behavior.", MessageType.Warning);
+                EGUI.Space(5);    
+            }
 
             EGUI.Horizontally(() =>
             {
