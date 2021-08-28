@@ -1,15 +1,13 @@
 #if UNITY_EDITOR
 
-using Build1.UnityUI.Utils;
 using Build1.UnityUI.Utils.EGUI;
-using Build1.UnityUI.Utils.EGUI.RenderModes;
 using UnityEditor;
 using UnityEngine;
 
 namespace Build1.UnityUI.Adaptive.Editor
 {
-    [CustomEditor(typeof(InterfaceActivator)), CanEditMultipleObjects]
-    public sealed class InterfaceActivatorEditor : UnityEditor.Editor
+    [CustomEditor(typeof(InterfaceScaler))]
+    public sealed class InterfaceScalerEditor : UnityEditor.Editor
     {
         private SerializedProperty items;
 
@@ -22,12 +20,8 @@ namespace Build1.UnityUI.Adaptive.Editor
         {
             serializedObject.Update();
 
-            var targetObject = (InterfaceActivator)serializedObject.targetObject;
+            var targetObject = (InterfaceScaler)serializedObject.targetObject;
             var propertiesChanged = false;
-
-            EGUI.Space(3);
-            EGUI.MessageBox("Making object controlling itself might result in unexpected behavior.", MessageType.Warning);
-            EGUI.Space(5);
 
             EGUI.Horizontally(() =>
             {
@@ -42,14 +36,14 @@ namespace Build1.UnityUI.Adaptive.Editor
                 EGUI.Horizontally(() =>
                 {
                     EGUI.Label("Game Object", 200);
-                    EGUI.Label("Active on Interfaces");
+                    EGUI.Label("Scales");
                 });
                 EGUI.Space(2);
                 
                 for (var i = 0; i < items.arraySize; i++)
                 {
                     var item = targetObject.items[i];
-                    
+                         
                     EGUI.Horizontally(() =>
                     {
                         EGUI.Object(item.gameObject, false, 200, gameObjectNew =>
@@ -57,26 +51,38 @@ namespace Build1.UnityUI.Adaptive.Editor
                             item.gameObject = gameObjectNew;
                             propertiesChanged = true;
                         });
-
-                        EGUI.Enum(item.interfaceType, EnumRenderMode.DropDown, value =>
+                        
+                        EGUI.Vertically(() =>
                         {
-                            item.interfaceType = (InterfaceType)value;
-                            propertiesChanged = true;
+                            for (var j = 0; j < item.items.Length; j++)
+                            {
+                                var subItem = item.items[j];
+                                
+                                EGUI.Horizontally(() =>
+                                {
+                                    EGUI.Label(subItem.interfaceType.ToString(), 60);
+                                    EGUI.FloatField(subItem.scale, scaleNew =>
+                                    {
+                                        subItem.scale = scaleNew;
+                                        propertiesChanged = true;
+                                    });
+                                });
+                            }
                         });
-
+            
                         if (EGUI.Button("-", 30, 18, new RectOffset(1, 1, 0, 2)))
                             ArrayUtility.Remove(ref targetObject.items, item);
                     });
                     EGUI.Space(2);
                 }
-
+            
                 EGUI.Horizontally(() =>
                 {
                     EGUI.Space();
                     if (EGUI.Button("+", 30, 25, new RectOffset(1, 1, 0, 2)))
-                        ArrayUtility.Add(ref targetObject.items, InterfaceActivatorItem.New(null));
+                        ArrayUtility.Add(ref targetObject.items, InterfaceScalerItem.New(null));
                 });
-
+            
                 if (propertiesChanged)
                     targetObject.SendMessage("OnValidate", null, SendMessageOptions.DontRequireReceiver);
             });

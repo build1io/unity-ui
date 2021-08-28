@@ -1,11 +1,10 @@
 using System;
 
-namespace Build1.UnityUI
+namespace Build1.UnityUI.Utils
 {
     [Flags]
     public enum InterfaceType
     {
-        Unknown = 0,
         Phone   = 1 << 0,
         Tablet  = 1 << 1,
         Desktop = 1 << 2,

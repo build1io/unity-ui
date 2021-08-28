@@ -8,7 +8,7 @@ namespace Build1.UnityUI.Adaptive
     [DisallowMultipleComponent]
     public sealed class InterfaceActivator : MonoBehaviour
     {
-        [SerializeField] private InterfaceActivatorItem[] items;
+        [SerializeField] public InterfaceActivatorItem[] items;
 
         private bool CanUpdate => items != null && items.Length > 0;
 
@@ -41,6 +41,16 @@ namespace Build1.UnityUI.Adaptive
 
             _interfaceType = interfaceType;
             UpdateActiveImpl(interfaceType);
+        }
+
+        private void Reset()
+        {
+            if (items == null)
+                items = new InterfaceActivatorItem[] { };    
+            else
+                ArrayUtility.Clear(ref items);
+            
+            ArrayUtility.Add(ref items, InterfaceActivatorItem.New(null));
         }
 
         private void OnValidate()
