@@ -6,24 +6,24 @@ using UnityEngine;
 namespace Build1.UnityUI.Adaptive
 {
     [Serializable]
-    public sealed class InterfaceScalerItem
+    public sealed class AdaptiveScalerItem
     {
         [SerializeField] public GameObject               gameObject;
-        [SerializeField] public InterfaceScalerSubItem[] items;
+        [SerializeField] public AdaptiveScalerSubItem[] items;
         
         /*
          * Static.
          */
 
-        public static InterfaceScalerItem New(GameObject gameObject)
+        public static AdaptiveScalerItem New(GameObject gameObject)
         {
-            var item = new InterfaceScalerItem
+            var item = new AdaptiveScalerItem
             {
                 gameObject = gameObject
             };
 
             var interfaceTypes = Enum.GetValues(typeof(InterfaceType)).Cast<InterfaceType>();
-            item.items = interfaceTypes.Select(InterfaceScalerSubItem.New).ToArray();
+            item.items = interfaceTypes.Select(AdaptiveScalerSubItem.New).ToArray();
             return item;
         }
     }

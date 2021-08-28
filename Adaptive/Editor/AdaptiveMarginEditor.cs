@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace Build1.UnityUI.Adaptive.Editor
 {
-    [CustomEditor(typeof(InterfaceScaler))]
-    public sealed class InterfaceScalerEditor : UnityEditor.Editor
+    [CustomEditor(typeof(AdaptiveMargin))]
+    public sealed class AdaptiveMarginEditor : UnityEditor.Editor
     {
         private SerializedProperty items;
 
@@ -20,7 +20,7 @@ namespace Build1.UnityUI.Adaptive.Editor
         {
             serializedObject.Update();
 
-            var targetObject = (InterfaceScaler)serializedObject.targetObject;
+            var targetObject = (AdaptiveMargin)serializedObject.targetObject;
             var propertiesChanged = false;
 
             EGUI.Horizontally(() =>
@@ -35,8 +35,13 @@ namespace Build1.UnityUI.Adaptive.Editor
             {
                 EGUI.Horizontally(() =>
                 {
-                    EGUI.Label("Game Object", 200);
-                    EGUI.Label("Scales");
+                    EGUI.Label("Rect Transform");
+                    EGUI.Label(" Interface", 75);
+                    EGUI.Label("Left", 60);
+                    EGUI.Label("Right", 60);
+                    EGUI.Label("Top", 60);
+                    EGUI.Label("Bottom", 60);
+                    EGUI.Label(string.Empty, 30);
                 });
                 EGUI.Space(2);
                 
@@ -46,9 +51,9 @@ namespace Build1.UnityUI.Adaptive.Editor
                          
                     EGUI.Horizontally(() =>
                     {
-                        EGUI.Object(item.gameObject, false, 200, gameObjectNew =>
+                        EGUI.Object(item.rectTransform, false, rectTransformNew =>
                         {
-                            item.gameObject = gameObjectNew;
+                            item.rectTransform = rectTransformNew;
                             propertiesChanged = true;
                         });
                         
@@ -61,9 +66,28 @@ namespace Build1.UnityUI.Adaptive.Editor
                                 EGUI.Horizontally(() =>
                                 {
                                     EGUI.Label(subItem.interfaceType.ToString(), 75);
-                                    EGUI.FloatField(subItem.scale, scaleNew =>
+                                    
+                                    EGUI.IntField(subItem.padding.left, 60, left =>
                                     {
-                                        subItem.scale = scaleNew;
+                                        subItem.padding.left = left;
+                                        propertiesChanged = true;
+                                    });
+                                    
+                                    EGUI.IntField(subItem.padding.right, 60, right =>
+                                    {
+                                        subItem.padding.right = right;
+                                        propertiesChanged = true;
+                                    });
+                                    
+                                    EGUI.IntField(subItem.padding.top, 60, top =>
+                                    {
+                                        subItem.padding.top = top;
+                                        propertiesChanged = true;
+                                    });
+                                    
+                                    EGUI.IntField(subItem.padding.bottom, 60, bottom =>
+                                    {
+                                        subItem.padding.bottom = bottom;
                                         propertiesChanged = true;
                                     });
                                 });
@@ -80,10 +104,12 @@ namespace Build1.UnityUI.Adaptive.Editor
                 {
                     EGUI.Space();
                     if (EGUI.Button("+", 30, 25, new RectOffset(1, 1, 0, 2)))
-                        ArrayUtility.Add(ref targetObject.items, InterfaceScalerItem.New(null));
+                        ArrayUtility.Add(ref targetObject.items, AdaptiveMarginItem.New(null));
                 });
-            });
             
+                
+            });
+
             serializedObject.ApplyModifiedProperties();
             
             if (propertiesChanged)
@@ -92,6 +118,7 @@ namespace Build1.UnityUI.Adaptive.Editor
                 EditorUtility.SetDirty(targetObject);
             }
         }
+        
     }
 }
 

@@ -9,8 +9,8 @@ using UnityEngine;
 
 namespace Build1.UnityUI.Adaptive.Editor
 {
-    [CustomEditor(typeof(InterfaceActivator)), CanEditMultipleObjects]
-    public sealed class InterfaceActivatorEditor : UnityEditor.Editor
+    [CustomEditor(typeof(AdaptiveActivator)), CanEditMultipleObjects]
+    public sealed class AdaptiveActivatorEditor : UnityEditor.Editor
     {
         private SerializedProperty items;
 
@@ -23,7 +23,7 @@ namespace Build1.UnityUI.Adaptive.Editor
         {
             serializedObject.Update();
 
-            var targetObject = (InterfaceActivator)serializedObject.targetObject;
+            var targetObject = (AdaptiveActivator)serializedObject.targetObject;
             var propertiesChanged = false;
 
             if (targetObject.items.FirstOrDefault(i => i.gameObject == targetObject.gameObject) != null)
@@ -78,7 +78,7 @@ namespace Build1.UnityUI.Adaptive.Editor
                 {
                     EGUI.Space();
                     if (EGUI.Button("+", 30, 25, new RectOffset(1, 1, 0, 2)))
-                        ArrayUtility.Add(ref targetObject.items, InterfaceActivatorItem.New(null));
+                        ArrayUtility.Add(ref targetObject.items, AdaptiveActivatorItem.New(null));
                 });
 
                 

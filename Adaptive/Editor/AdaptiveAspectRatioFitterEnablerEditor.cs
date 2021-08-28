@@ -8,14 +8,14 @@ using UnityEngine;
 
 namespace Build1.UnityUI.Adaptive.Editor
 {
-    [CustomEditor(typeof(InterfaceAspectRatioFitterEnabler))]
-    public sealed class InterfaceAspectRatioFitterEnablerEditor : UnityEditor.Editor
+    [CustomEditor(typeof(AdaptiveAspectRatioFitterEnabler))]
+    public sealed class AdaptiveAspectRatioFitterEnablerEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
 
-            var targetObject = (InterfaceAspectRatioFitterEnabler)serializedObject.targetObject;
+            var targetObject = (AdaptiveAspectRatioFitterEnabler)serializedObject.targetObject;
             var propertiesChanged = false;
 
             EGUI.Horizontally(() =>

@@ -7,10 +7,9 @@ namespace Build1.UnityUI.Adaptive
 {
     [ExecuteInEditMode]
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(RectTransform))]
-    public sealed class InterfaceMargin : MonoBehaviour
+    public sealed class AdaptiveScaler : MonoBehaviour
     {
-        [SerializeField] public InterfaceMarginItem[] items;
+        [SerializeField] public AdaptiveScalerItem[] items;
         
         private bool CanUpdate => items != null && items.Length > 0;
 
@@ -40,7 +39,7 @@ namespace Build1.UnityUI.Adaptive
             var interfaceType = InterfaceUtil.GetInterfaceType(Application.platform, SystemInfo.deviceType);
             if (interfaceType == _interfaceType)
                 return;
-
+            
             _interfaceType = interfaceType;
             UpdateScaleImpl(interfaceType);
         }
@@ -48,11 +47,11 @@ namespace Build1.UnityUI.Adaptive
         private void Reset()
         {
             if (items == null)
-                items = new InterfaceMarginItem[] { };    
+                items = new AdaptiveScalerItem[] { };    
             else
                 ArrayUtility.Clear(ref items);
 
-            ArrayUtility.Add(ref items, InterfaceMarginItem.New(GetComponent<RectTransform>()));
+            ArrayUtility.Add(ref items, AdaptiveScalerItem.New(gameObject));
         }
 
         private void OnValidate()
@@ -81,15 +80,12 @@ namespace Build1.UnityUI.Adaptive
         {
             foreach (var item in items)
             {
-                if (item.rectTransform == null)
+                if (item.gameObject == null)
                     continue;
 
                 var subItem = item.items.FirstOrDefault(i => (i.interfaceType & interfaceType) == interfaceType);
-                if (subItem == null)
-                    continue;
-                
-                item.rectTransform.offsetMin = new Vector2(subItem.padding.left, subItem.padding.bottom);
-                item.rectTransform.offsetMax = new Vector2(-subItem.padding.right, -subItem.padding.top);
+                if (subItem != null)
+                    item.gameObject.transform.localScale = new Vector3(subItem.scale, subItem.scale, subItem.scale);
             }
         }
     }

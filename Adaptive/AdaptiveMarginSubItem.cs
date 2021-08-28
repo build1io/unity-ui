@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Build1.UnityUI.Adaptive
 {
     [Serializable]
-    public sealed class InterfaceMarginSubItem
+    public sealed class AdaptiveMarginSubItem
     {
         [SerializeField] public InterfaceType interfaceType;
         [SerializeField] public RectOffset    padding;
@@ -14,9 +14,9 @@ namespace Build1.UnityUI.Adaptive
          * Static.
          */
 
-        public static InterfaceMarginSubItem New(InterfaceType interfaceType, RectTransform rectTransform)
+        public static AdaptiveMarginSubItem New(InterfaceType interfaceType, RectTransform rectTransform)
         {
-            return new InterfaceMarginSubItem
+            return new AdaptiveMarginSubItem
             {
                 interfaceType = interfaceType,
                 padding = rectTransform == null

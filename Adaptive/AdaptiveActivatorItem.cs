@@ -5,20 +5,20 @@ using UnityEngine;
 namespace Build1.UnityUI.Adaptive
 {
     [Serializable]
-    public sealed class InterfaceScalerSubItem
+    public sealed class AdaptiveActivatorItem
     {
+        [SerializeField] public GameObject    gameObject;
         [SerializeField] public InterfaceType interfaceType;
-        [SerializeField] public float         scale = 1;
         
         /*
          * Static.
          */
 
-        public static InterfaceScalerSubItem New(InterfaceType interfaceType)
+        public static AdaptiveActivatorItem New(GameObject gameObject)
         {
-            var item = new InterfaceScalerSubItem
+            var item = new AdaptiveActivatorItem
             {
-                interfaceType = interfaceType
+                gameObject = gameObject
             };
             return item;
         }

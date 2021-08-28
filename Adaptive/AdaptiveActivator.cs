@@ -1,4 +1,3 @@
-using System.Linq;
 using Build1.UnityUI.Utils;
 using UnityEditor;
 using UnityEngine;
@@ -7,24 +6,24 @@ namespace Build1.UnityUI.Adaptive
 {
     [ExecuteInEditMode]
     [DisallowMultipleComponent]
-    public sealed class InterfaceScaler : MonoBehaviour
+    public sealed class AdaptiveActivator : MonoBehaviour
     {
-        [SerializeField] public InterfaceScalerItem[] items;
-        
+        [SerializeField] public AdaptiveActivatorItem[] items;
+
         private bool CanUpdate => items != null && items.Length > 0;
 
         private void Awake()
         {
             if (Application.isPlaying)
-                ScreenUtil.SubscribeOnScreenResolutionChanged(UpdateScale);
+                ScreenUtil.SubscribeOnScreenResolutionChanged(UpdateActive);
 
-            UpdateScale();
+            UpdateActive();
         }
 
         private void OnDestroy()
         {
             if (Application.isPlaying)
-                ScreenUtil.UnsubscribeFromScreenResolutionChanged(UpdateScale);
+                ScreenUtil.UnsubscribeFromScreenResolutionChanged(UpdateActive);
         }
 
         #if UNITY_EDITOR
@@ -41,17 +40,17 @@ namespace Build1.UnityUI.Adaptive
                 return;
 
             _interfaceType = interfaceType;
-            UpdateScaleImpl(interfaceType);
+            UpdateActiveImpl(interfaceType);
         }
-        
+
         private void Reset()
         {
             if (items == null)
-                items = new InterfaceScalerItem[] { };    
+                items = new AdaptiveActivatorItem[] { };    
             else
                 ArrayUtility.Clear(ref items);
-
-            ArrayUtility.Add(ref items, InterfaceScalerItem.New(gameObject));
+            
+            ArrayUtility.Add(ref items, AdaptiveActivatorItem.New(null));
         }
 
         private void OnValidate()
@@ -62,30 +61,26 @@ namespace Build1.UnityUI.Adaptive
         private void OnValidateImpl()
         {
             EditorApplication.update -= OnValidateImpl;
-            UpdateScale();
+            UpdateActive();
         }
 
         #endif
 
-        private void UpdateScale()
+        private void UpdateActive()
         {
             if (!CanUpdate)
                 return;
 
             var interfaceType = InterfaceUtil.GetInterfaceType(Application.platform, SystemInfo.deviceType);
-            UpdateScaleImpl(interfaceType);
+            UpdateActiveImpl(interfaceType);
         }
 
-        private void UpdateScaleImpl(InterfaceType interfaceType)
+        private void UpdateActiveImpl(InterfaceType interfaceType)
         {
             foreach (var item in items)
             {
-                if (item.gameObject == null)
-                    continue;
-
-                var subItem = item.items.FirstOrDefault(i => (i.interfaceType & interfaceType) == interfaceType);
-                if (subItem != null)
-                    item.gameObject.transform.localScale = new Vector3(subItem.scale, subItem.scale, subItem.scale);
+                if (item.gameObject != null)
+                    item.gameObject.SetActive((item.interfaceType & interfaceType) == interfaceType);
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Build1.UnityUI.Adaptive
     [DisallowMultipleComponent]
     [RequireComponent(typeof(AspectRatioFitter))]
     [RequireComponent(typeof(RectTransform))]
-    public sealed class InterfaceAspectRatioFitterEnabler : MonoBehaviour
+    public sealed class AdaptiveAspectRatioFitterEnabler : MonoBehaviour
     {
         [SerializeField] public AspectRatioFitter aspectRatioFitter;
         [SerializeField] public RectTransform     rectTransform;
