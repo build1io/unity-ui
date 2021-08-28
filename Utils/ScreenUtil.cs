@@ -8,20 +8,44 @@ namespace Build1.UnityUI.Utils
     {
         private static ScreenResolutionChangedListener _listener;
         private static List<Action>                    _listeners;
+
+        private static float ScreenWidth
+        {
+            get
+            {
+                #if UNITY_EDITOR
+                    return Screen.currentResolution.width;
+                #else
+                    return Screen.width;
+                #endif
+            }
+        }
         
+        private static float ScreenHeight
+        {
+            get
+            {
+                #if UNITY_EDITOR
+                return Screen.currentResolution.height;
+                #else
+                    return Screen.height;
+                #endif
+            }
+        }
+
         /*
          * Screen Values.
          */
         
         public static float GetAspectRatio()
         {
-            return Mathf.Max((float)Screen.width, Screen.height) / Mathf.Min(Screen.width, Screen.height); 
+            return Mathf.Max(ScreenWidth, ScreenHeight) / Mathf.Min(ScreenWidth, ScreenHeight); 
         }
         
         public static float GetDiagonalInches()
         {
-            var screenWidth = Screen.width / Screen.dpi;
-            var screenHeight = Screen.height / Screen.dpi;
+            var screenWidth = ScreenWidth / Screen.dpi;
+            var screenHeight = ScreenHeight / Screen.dpi;
             return Mathf.Sqrt(Mathf.Pow(screenWidth, 2) + Mathf.Pow(screenHeight, 2));
         }
         
