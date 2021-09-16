@@ -26,8 +26,6 @@ namespace Build1.UnityUI.Animation
 
         public override void OnInspectorGUI()
         {
-            var imageAnimator = (ImageAnimator)target;
-
             serializedObject.Update();
             
             EditorGUILayout.PropertyField(framesPerSecondProperty);
@@ -38,14 +36,14 @@ namespace Build1.UnityUI.Animation
             EditorGUILayout.PropertyField(spritesProperty);
             EditorGUILayout.Space(5);
             
-            DropAreaGUI(imageAnimator);
+            DropAreaGUI();
             
             EditorGUILayout.Space(5);
             
             serializedObject.ApplyModifiedProperties();
         }
 
-        public void DropAreaGUI(ImageAnimator imageAnimator)
+        public void DropAreaGUI()
         {
             var @event = Event.current;
             var area = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
@@ -68,6 +66,9 @@ namespace Build1.UnityUI.Animation
                     if (@event.type == EventType.DragPerform)
                     {
                         DragAndDrop.AcceptDrag();
+                        
+                        spritesProperty.ClearArray();
+                        
                         foreach (var draggedObject in DragAndDrop.objectReferences)
                         {
                             if (!(draggedObject is Texture2D)) 
@@ -75,8 +76,16 @@ namespace Build1.UnityUI.Animation
                             
                             var path = AssetDatabase.GetAssetPath(draggedObject.GetInstanceID());
                             var objects = AssetDatabase.LoadAllAssetsAtPath(path);
+                            var sprites = objects.Where(q => q is Sprite).Cast<Sprite>().ToArray();
+
+                            var index = 0;
+                            foreach (var sprite in sprites)
+                            {
+                                spritesProperty.InsertArrayElementAtIndex(index);
+                                spritesProperty.GetArrayElementAtIndex(index).objectReferenceValue = sprite;
+                                index++;
+                            }
                             
-                            imageAnimator.Sprites = objects.Where(q => q is Sprite).Cast<Sprite>().ToArray();
                             break;
                         }
                     }

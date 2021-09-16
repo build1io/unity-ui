@@ -11,8 +11,8 @@ namespace Build1.UnityUI.Animation
         [SerializeField] private Image    image;
         [SerializeField] private float    framesPerSecond = 24;
         [SerializeField] private int      startFrame;
-        [SerializeField] private bool     loop;
-        [SerializeField] private bool     playOnAwake;
+        [SerializeField] private bool     loop        = true;
+        [SerializeField] private bool     playOnAwake = true;
         [SerializeField] private Sprite[] sprites;
 
         public Sprite[] Sprites
@@ -54,8 +54,7 @@ namespace Build1.UnityUI.Animation
 
         private void OnDisable()
         {
-            if (!Application.isPlaying)
-                EditorApplication.update -= EditorUpdate;
+            EditorApplication.update -= EditorUpdate;
         }
 
         private void Reset()
