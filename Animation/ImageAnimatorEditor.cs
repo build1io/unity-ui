@@ -9,11 +9,15 @@ namespace Build1.UnityUI.Animation
     [CustomEditor(typeof(ImageAnimator))]
     public sealed class ImageAnimatorEditor : Editor
     {
+        private bool _eventsUnfolded; 
+        
         private SerializedProperty framesPerSecondProperty;
         private SerializedProperty startFrameProperty;
         private SerializedProperty loopProperty;
         private SerializedProperty playOnAwakeProperty;
         private SerializedProperty spritesProperty;
+        private SerializedProperty onFrameChangedProperty;
+        private SerializedProperty onCompleteProperty;
         
         public void OnEnable()
         {
@@ -22,6 +26,8 @@ namespace Build1.UnityUI.Animation
             loopProperty = serializedObject.FindProperty("loop");
             playOnAwakeProperty = serializedObject.FindProperty("playOnAwake");
             spritesProperty = serializedObject.FindProperty("sprites");
+            onFrameChangedProperty = serializedObject.FindProperty("onFrameChanged");
+            onCompleteProperty = serializedObject.FindProperty("onComplete");
         }
 
         public override void OnInspectorGUI()
@@ -33,13 +39,30 @@ namespace Build1.UnityUI.Animation
             EditorGUILayout.PropertyField(loopProperty);
             EditorGUILayout.PropertyField(playOnAwakeProperty);
             EditorGUILayout.Space(7);
-            EditorGUILayout.PropertyField(spritesProperty);
-            EditorGUILayout.Space(5);
             
             DropAreaGUI();
             
-            EditorGUILayout.Space(5);
+            EditorGUILayout.Space(3);
+            EditorGUILayout.PropertyField(spritesProperty);
+            EditorGUILayout.Space(2);
             
+            var style = new GUIStyle(EditorStyles.foldout)
+            {
+                fontStyle = FontStyle.Bold
+            };
+
+            _eventsUnfolded = EditorGUILayout.Foldout(_eventsUnfolded, "Events", true, style);
+            if (_eventsUnfolded)
+            {
+                EditorGUILayout.Space(4);
+                EditorGUILayout.PropertyField(onFrameChangedProperty);
+                EditorGUILayout.PropertyField(onCompleteProperty);    
+            }
+            else
+            {
+                EditorGUILayout.Space(2);
+            }
+
             serializedObject.ApplyModifiedProperties();
         }
 
@@ -53,7 +76,7 @@ namespace Build1.UnityUI.Animation
                 alignment = TextAnchor.MiddleCenter
             };
             
-            GUI.Box(area, "Drop main sprite here", style);
+            GUI.Box(area, "Drop sprite here", style);
             
             switch (@event.type)
             {
@@ -66,8 +89,13 @@ namespace Build1.UnityUI.Animation
                     if (@event.type == EventType.DragPerform)
                     {
                         DragAndDrop.AcceptDrag();
+
+                        var result = EditorUtility.DisplayDialogComplex("Image Animator", "Add or Replace sprites?", "Add", "Cancel", "Replace");
+                        if (result == 1)
+                            break;
                         
-                        spritesProperty.ClearArray();
+                        if (result == 2)
+                            spritesProperty.ClearArray();
                         
                         foreach (var draggedObject in DragAndDrop.objectReferences)
                         {
@@ -78,7 +106,7 @@ namespace Build1.UnityUI.Animation
                             var objects = AssetDatabase.LoadAllAssetsAtPath(path);
                             var sprites = objects.Where(q => q is Sprite).Cast<Sprite>().ToArray();
 
-                            var index = 0;
+                            var index = spritesProperty.arraySize;
                             foreach (var sprite in sprites)
                             {
                                 spritesProperty.InsertArrayElementAtIndex(index);

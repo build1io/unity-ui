@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Build1.UnityUI.Animation
@@ -8,17 +9,35 @@ namespace Build1.UnityUI.Animation
     [RequireComponent(typeof(Image))]
     public sealed class ImageAnimator : MonoBehaviour
     {
-        [SerializeField] private Image    image;
-        [SerializeField] private float    framesPerSecond = 24;
-        [SerializeField] private int      startFrame;
-        [SerializeField] private bool     loop        = true;
-        [SerializeField] private bool     playOnAwake = true;
-        [SerializeField] private Sprite[] sprites;
+        [SerializeField] private Image           image;
+        [SerializeField] private float           framesPerSecond = 24;
+        [SerializeField] private int             startFrame;
+        [SerializeField] private bool            loop        = true;
+        [SerializeField] private bool            playOnAwake = true;
+        [SerializeField] private Sprite[]        sprites;
+        [SerializeField] private UnityEvent<int> onFrameChanged = new UnityEvent<int>();
+        [SerializeField] private UnityEvent      onComplete     = new UnityEvent();
 
         public Sprite[] Sprites
         {
             get => sprites;
             set => sprites = value;
+        }
+
+        public int  CurrentFrame => _frame;
+        public int  TotalFrames  => sprites.Length;
+        public bool Reverse      { get; set; }
+
+        public UnityEvent<int> OnFrameChanged
+        {
+            get => onFrameChanged;
+            set => onFrameChanged = value;
+        }
+
+        public UnityEvent OnComplete
+        {
+            get => onComplete;
+            set => onComplete = value;
         }
 
         private int   _frame;
@@ -128,29 +147,51 @@ namespace Build1.UnityUI.Animation
             while (_frameTime >= frameDuration)
                 NextFrame(frameDuration);
 
-            if (!_revalidate)
+            if (!_revalidate || !enabled)
                 return;
 
             image.sprite = sprites[_frame];
             _revalidate = false;
+            
+            onFrameChanged?.Invoke(_frame);
+            
+            if (_frame == sprites.Length - 1)
+                onComplete?.Invoke();
         }
 
         private void NextFrame(float frameDuration)
         {
             _frameTime -= frameDuration;
 
-            if (_frame >= sprites.Length - 1)
+            if (Reverse)
             {
-                if (loop)
-                    _frame = 0;
+                if (_frame <= 0)
+                {
+                    if (loop)
+                        _frame = sprites.Length - 1;
+                    else
+                        enabled = false;
+                }
                 else
-                    enabled = false;
+                {
+                    _frame--;
+                }
             }
             else
             {
-                _frame++;
+                if (_frame >= sprites.Length - 1)
+                {
+                    if (loop)
+                        _frame = 0;
+                    else
+                        enabled = false;
+                }
+                else
+                {
+                    _frame++;
+                }    
             }
-
+            
             _revalidate = true;
         }
     }
