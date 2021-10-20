@@ -17,8 +17,16 @@ namespace Build1.UnityUI.Adaptive
         [SerializeField] public bool              stretch = true;
         [SerializeField] public bool              resetOffsetsWhenAspectRationFitterDisabled = true;
 
+        #if UNITY_EDITOR
+        
+        private bool CanUpdate => gameObject != null && gameObject.activeInHierarchy && aspectRatioFitter != null && rectTransform != null;
+        
+        #else
+        
         private bool CanUpdate => aspectRatioFitter != null && rectTransform != null;
         
+        #endif
+
         private void Awake()
         {
             if (Application.isPlaying)
@@ -61,6 +69,9 @@ namespace Build1.UnityUI.Adaptive
 
         private void OnValidate()
         {
+            if (Application.isPlaying)
+                return;
+            
             EditorApplication.update += OnValidateImpl;
         }
 
