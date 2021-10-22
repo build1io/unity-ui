@@ -12,16 +12,8 @@ namespace Build1.UnityUI.Adaptive
     {
         [SerializeField] public AdaptiveMarginItem[] items;
         
-        #if UNITY_EDITOR
+        private bool CanUpdate => isActiveAndEnabled && items != null && items.Length > 0;
         
-        private bool CanUpdate => gameObject != null && gameObject.activeInHierarchy && items != null && items.Length > 0;
-        
-        #else
-        
-        private bool CanUpdate => items != null && items.Length > 0;
-        
-        #endif
-
         private void Awake()
         {
             if (Application.isPlaying)
@@ -65,16 +57,8 @@ namespace Build1.UnityUI.Adaptive
 
         private void OnValidate()
         {
-            if (Application.isPlaying)
-                return;
-            
-            EditorApplication.update += OnValidateImpl;
-        }
-
-        private void OnValidateImpl()
-        {
-            EditorApplication.update -= OnValidateImpl;
-            UpdateScale();
+            if (!Application.isPlaying && isActiveAndEnabled)
+                EditorApplication.delayCall += UpdateScale;
         }
 
         #endif
