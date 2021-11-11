@@ -17,15 +17,19 @@ namespace Build1.UnityUI.Adaptive
         private void Awake()
         {
             if (Application.isPlaying)
-                ScreenUtil.SubscribeOnScreenResolutionChanged(UpdateScale);
+                ScreenUtil.SubscribeOnScreenResolutionChanged(UpdateMargin);
 
-            UpdateScale();
+            UpdateMargin();
         }
 
         private void OnDestroy()
         {
             if (Application.isPlaying)
-                ScreenUtil.UnsubscribeFromScreenResolutionChanged(UpdateScale);
+                ScreenUtil.UnsubscribeFromScreenResolutionChanged(UpdateMargin);
+            
+            #if UNITY_EDITOR
+                EditorApplication.delayCall -= UpdateMargin;
+            #endif
         }
 
         #if UNITY_EDITOR
@@ -58,12 +62,12 @@ namespace Build1.UnityUI.Adaptive
         private void OnValidate()
         {
             if (!Application.isPlaying && isActiveAndEnabled)
-                EditorApplication.delayCall += UpdateScale;
+                EditorApplication.delayCall += UpdateMargin;
         }
 
         #endif
 
-        private void UpdateScale()
+        private void UpdateMargin()
         {
             if (!CanUpdate)
                 return;

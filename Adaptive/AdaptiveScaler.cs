@@ -25,6 +25,10 @@ namespace Build1.UnityUI.Adaptive
         {
             if (Application.isPlaying)
                 ScreenUtil.UnsubscribeFromScreenResolutionChanged(UpdateScale);
+            
+            #if UNITY_EDITOR
+                EditorApplication.delayCall -= UpdateScale;
+            #endif
         }
 
         #if UNITY_EDITOR
