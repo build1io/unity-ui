@@ -58,9 +58,15 @@ namespace Build1.UnityUI.Utils
             if (_listeners != null && _listeners.Contains(onChanged))
                 return;
             
-            if (_listener == null && _listeners == null)
+            if (_listener == null)
             {
-                _listener = UnityUI.GetRoot().AddComponent<ScreenResolutionChangedListener>();
+                var root = UnityUI.GetRoot();
+
+                _listener = root.GetComponent<ScreenResolutionChangedListener>();
+
+                if (_listener == null)
+                    _listener = root.AddComponent<ScreenResolutionChangedListener>(); 
+                    
                 _listener.OnChanged += OnScreenResolutionChanged;
             }
             
