@@ -22,7 +22,7 @@ namespace Build1.UnityUI.Adaptive
         private void Awake()
         {
             if (Application.isPlaying)
-                ScreenUtil.SubscribeOnScreenResolutionChanged(UpdateAspectRatioFitter);
+                ScreenUtil.OnResolutionChanged += UpdateAspectRatioFitter;
 
             UpdateAspectRatioFitter();
         }
@@ -30,7 +30,7 @@ namespace Build1.UnityUI.Adaptive
         private void OnDestroy()
         {
             if (Application.isPlaying)
-                ScreenUtil.UnsubscribeFromScreenResolutionChanged(UpdateAspectRatioFitter);
+                ScreenUtil.OnResolutionChanged -= UpdateAspectRatioFitter;
         }
 
         #if UNITY_EDITOR

@@ -16,7 +16,7 @@ namespace Build1.UnityUI.Adaptive
         private void Awake()
         {
             if (Application.isPlaying)
-                ScreenUtil.SubscribeOnScreenResolutionChanged(UpdateScale);
+                ScreenUtil.OnResolutionChanged += UpdateScale;
 
             UpdateScale();
         }
@@ -24,7 +24,7 @@ namespace Build1.UnityUI.Adaptive
         private void OnDestroy()
         {
             if (Application.isPlaying)
-                ScreenUtil.UnsubscribeFromScreenResolutionChanged(UpdateScale);
+                ScreenUtil.OnResolutionChanged -= UpdateScale;
             
             #if UNITY_EDITOR
                 EditorApplication.delayCall -= UpdateScale;
