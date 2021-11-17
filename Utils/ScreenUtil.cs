@@ -38,6 +38,9 @@ namespace Build1.UnityUI.Utils
 
         static ScreenUtil()
         {
+            if (!Application.isPlaying)
+                return;
+            
             var root = UnityUI.GetRoot();
             _listener = root.GetComponent<ScreenListener>();
             _listener ??= root.AddComponent<ScreenListener>();
