@@ -23,10 +23,13 @@ namespace Build1.UnityUI.Adaptive
         {
             if (Application.isPlaying)
                 ScreenUtil.OnResolutionChanged += UpdateAspectRatioFitter;
-
-            UpdateAspectRatioFitter();
         }
 
+        private void OnEnable()
+        {
+            UpdateAspectRatioFitter();
+        }
+        
         private void OnDestroy()
         {
             if (Application.isPlaying)

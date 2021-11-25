@@ -16,7 +16,10 @@ namespace Build1.UnityUI.Adaptive
         {
             if (Application.isPlaying)
                 ScreenUtil.OnResolutionChanged += UpdateActive;
+        }
 
+        private void OnEnable()
+        {
             UpdateActive();
         }
 
