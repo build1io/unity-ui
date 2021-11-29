@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 
+using System.Linq;
 using Build1.UnityUI.Utils.EGUI;
 using UnityEditor;
 using UnityEngine;
@@ -42,7 +43,9 @@ namespace Build1.UnityUI.Adaptive.Editor
                 
                 for (var i = 0; i < items.arraySize; i++)
                 {
-                    var item = targetObject.items[i];
+                    var item = targetObject.items.ElementAtOrDefault(i);
+                    if (item == null)
+                        continue;
                          
                     EGUI.Horizontally(() =>
                     {
