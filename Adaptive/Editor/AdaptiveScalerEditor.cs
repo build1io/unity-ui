@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 
 using System.Linq;
-using Build1.UnityUI.Utils.EGUI;
+using Build1.UnityEGUI;
 using UnityEditor;
 using UnityEngine;
 
@@ -29,7 +29,7 @@ namespace Build1.UnityUI.Adaptive.Editor
                 EGUI.Label("Managed Objects", FontStyle.Bold);
                 EGUI.Space();
                 EGUI.Label("Count:", 40);
-                EGUI.IntField(items.arraySize, 50, value => { items.arraySize = value; });
+                EGUI.Int(items.arraySize, 50, value => { items.arraySize = value; });
             });
 
             EGUI.Panel(10, () =>
@@ -64,7 +64,7 @@ namespace Build1.UnityUI.Adaptive.Editor
                                 EGUI.Horizontally(() =>
                                 {
                                     EGUI.Label(subItem.interfaceType.ToString(), 75);
-                                    EGUI.FloatField(subItem.scale, scaleNew =>
+                                    EGUI.Float(subItem.scale, scaleNew =>
                                     {
                                         subItem.scale = scaleNew;
                                         propertiesChanged = true;

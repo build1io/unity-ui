@@ -1,8 +1,8 @@
 #if UNITY_EDITOR
 
+using Build1.UnityEGUI;
+using Build1.UnityEGUI.RenderModes;
 using Build1.UnityUI.Utils;
-using Build1.UnityUI.Utils.EGUI;
-using Build1.UnityUI.Utils.EGUI.RenderModes;
 using UnityEditor;
 using UnityEngine;
 

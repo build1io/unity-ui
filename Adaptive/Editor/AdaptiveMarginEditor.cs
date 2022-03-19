@@ -1,6 +1,6 @@
 #if UNITY_EDITOR
 
-using Build1.UnityUI.Utils.EGUI;
+using Build1.UnityEGUI;
 using UnityEditor;
 using UnityEngine;
 
@@ -28,7 +28,7 @@ namespace Build1.UnityUI.Adaptive.Editor
                 EGUI.Label("Managed Objects", FontStyle.Bold);
                 EGUI.Space();
                 EGUI.Label("Count:", 40);
-                EGUI.IntField(items.arraySize, 50, value => { items.arraySize = value; });
+                EGUI.Int(items.arraySize, 50, value => { items.arraySize = value; });
             });
 
             EGUI.Panel(10, () =>
@@ -67,25 +67,25 @@ namespace Build1.UnityUI.Adaptive.Editor
                                 {
                                     EGUI.Label(subItem.interfaceType.ToString(), 75);
                                     
-                                    EGUI.IntField(subItem.padding.left, 60, left =>
+                                    EGUI.Int(subItem.padding.left, 60, left =>
                                     {
                                         subItem.padding.left = left;
                                         propertiesChanged = true;
                                     });
                                     
-                                    EGUI.IntField(subItem.padding.right, 60, right =>
+                                    EGUI.Int(subItem.padding.right, 60, right =>
                                     {
                                         subItem.padding.right = right;
                                         propertiesChanged = true;
                                     });
                                     
-                                    EGUI.IntField(subItem.padding.top, 60, top =>
+                                    EGUI.Int(subItem.padding.top, 60, top =>
                                     {
                                         subItem.padding.top = top;
                                         propertiesChanged = true;
                                     });
                                     
-                                    EGUI.IntField(subItem.padding.bottom, 60, bottom =>
+                                    EGUI.Int(subItem.padding.bottom, 60, bottom =>
                                     {
                                         subItem.padding.bottom = bottom;
                                         propertiesChanged = true;
