@@ -1,5 +1,3 @@
-using Build1.UnityUI.Utils;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,42 +15,23 @@ namespace Build1.UnityUI.Adaptive
         [SerializeField] public bool              stretch = true;
         [SerializeField] public bool              resetOffsetsWhenAspectRationFitterDisabled = true;
 
-        private bool CanUpdate => isActiveAndEnabled && aspectRatioFitter != null && rectTransform != null;
-        
         private void Awake()
         {
-            if (Application.isPlaying)
-                ScreenUtil.OnResolutionChanged += UpdateAspectRatioFitter;
+            UnityUI.OnInterfaceTypeChanged += UpdateAspectRatioFitter;
         }
 
         private void OnEnable()
         {
-            UpdateAspectRatioFitter();
+            UpdateAspectRatioFitter(UnityUI.CurrentInterfaceType);
         }
         
         private void OnDestroy()
         {
-            if (Application.isPlaying)
-                ScreenUtil.OnResolutionChanged -= UpdateAspectRatioFitter;
+            UnityUI.OnInterfaceTypeChanged -= UpdateAspectRatioFitter;
         }
 
         #if UNITY_EDITOR
 
-        private InterfaceType _interfaceType;
-
-        private void Update()
-        {
-            if (!CanUpdate)
-                return;
-            
-            var currentInterfaceType = InterfaceUtil.GetInterfaceType(Application.platform, SystemInfo.deviceType);
-            if (currentInterfaceType == _interfaceType)
-                return;
-
-            _interfaceType = currentInterfaceType;
-            UpdateAspectRatioFitterImpl(currentInterfaceType);
-        }
-        
         private void Reset()
         {
             if (aspectRatioFitter == null)
@@ -62,24 +41,9 @@ namespace Build1.UnityUI.Adaptive
                 rectTransform = GetComponent<RectTransform>();
         }
 
-        private void OnValidate()
-        {
-            if (!Application.isPlaying && isActiveAndEnabled)
-                EditorApplication.delayCall += UpdateAspectRatioFitter;
-        }
-
         #endif
 
-        private void UpdateAspectRatioFitter()
-        {
-            if (!CanUpdate)
-                return;
-            
-            var currentInterfaceType = InterfaceUtil.GetInterfaceType(Application.platform, SystemInfo.deviceType);
-            UpdateAspectRatioFitterImpl(currentInterfaceType);
-        }
-
-        private void UpdateAspectRatioFitterImpl(InterfaceType currentInterfaceType)
+        private void UpdateAspectRatioFitter(InterfaceType currentInterfaceType)
         {
             aspectRatioFitter.enabled = (interfaceType & currentInterfaceType) == currentInterfaceType;
 

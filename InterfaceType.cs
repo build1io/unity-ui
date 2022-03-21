@@ -1,6 +1,6 @@
 using System;
 
-namespace Build1.UnityUI.Utils
+namespace Build1.UnityUI
 {
     [Flags]
     public enum InterfaceType

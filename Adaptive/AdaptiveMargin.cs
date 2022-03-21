@@ -1,6 +1,4 @@
 using System.Linq;
-using Build1.UnityUI.Utils;
-using UnityEditor;
 using UnityEngine;
 
 namespace Build1.UnityUI.Adaptive
@@ -12,74 +10,36 @@ namespace Build1.UnityUI.Adaptive
     {
         [SerializeField] public AdaptiveMarginItem[] items;
         
-        private bool CanUpdate => isActiveAndEnabled && items != null && items.Length > 0;
-        
         private void Awake()
         {
-            if (Application.isPlaying)
-                ScreenUtil.OnResolutionChanged += UpdateMargin;
+            UnityUI.OnInterfaceTypeChanged += UpdateMargin;
         }
 
         private void OnEnable()
         {
-            UpdateMargin();
+            UpdateMargin(UnityUI.CurrentInterfaceType);
         }
 
         private void OnDestroy()
         {
-            if (Application.isPlaying)
-                ScreenUtil.OnResolutionChanged -= UpdateMargin;
-            
-            #if UNITY_EDITOR
-                EditorApplication.delayCall -= UpdateMargin;
-            #endif
+            UnityUI.OnInterfaceTypeChanged -= UpdateMargin;
         }
 
         #if UNITY_EDITOR
 
-        private InterfaceType _interfaceType;
-
-        private void Update()
-        {
-            if (!CanUpdate)
-                return;
-
-            var interfaceType = InterfaceUtil.GetInterfaceType(Application.platform, SystemInfo.deviceType);
-            if (interfaceType == _interfaceType)
-                return;
-
-            _interfaceType = interfaceType;
-            UpdateScaleImpl(interfaceType);
-        }
-        
         private void Reset()
         {
             if (items == null)
                 items = new AdaptiveMarginItem[] { };    
             else
-                ArrayUtility.Clear(ref items);
+                UnityEditor.ArrayUtility.Clear(ref items);
 
-            ArrayUtility.Add(ref items, AdaptiveMarginItem.New(GetComponent<RectTransform>()));
-        }
-
-        private void OnValidate()
-        {
-            if (!Application.isPlaying && isActiveAndEnabled)
-                EditorApplication.delayCall += UpdateMargin;
+            UnityEditor.ArrayUtility.Add(ref items, AdaptiveMarginItem.New(GetComponent<RectTransform>()));
         }
 
         #endif
 
-        private void UpdateMargin()
-        {
-            if (!CanUpdate)
-                return;
-
-            var interfaceType = InterfaceUtil.GetInterfaceType(Application.platform, SystemInfo.deviceType);
-            UpdateScaleImpl(interfaceType);
-        }
-
-        private void UpdateScaleImpl(InterfaceType interfaceType)
+        private void UpdateMargin(InterfaceType interfaceType)
         {
             foreach (var item in items)
             {

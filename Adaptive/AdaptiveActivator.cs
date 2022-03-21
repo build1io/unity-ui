@@ -1,5 +1,3 @@
-using Build1.UnityUI.Utils;
-using UnityEditor;
 using UnityEngine;
 
 namespace Build1.UnityUI.Adaptive
@@ -10,74 +8,36 @@ namespace Build1.UnityUI.Adaptive
     {
         [SerializeField] public AdaptiveActivatorItem[] items;
 
-        private bool CanUpdate => isActiveAndEnabled && items != null && items.Length > 0;
-        
         private void Awake()
         {
-            if (Application.isPlaying)
-                ScreenUtil.OnResolutionChanged += UpdateActive;
+            UnityUI.OnInterfaceTypeChanged += UpdateActive;
         }
 
         private void OnEnable()
         {
-            UpdateActive();
+            UpdateActive(UnityUI.CurrentInterfaceType);
         }
 
         private void OnDestroy()
         {
-            if (Application.isPlaying)
-                ScreenUtil.OnResolutionChanged -= UpdateActive;
-            
-            #if UNITY_EDITOR
-                EditorApplication.delayCall -= UpdateActive;
-            #endif
+            UnityUI.OnInterfaceTypeChanged -= UpdateActive;
         }
 
         #if UNITY_EDITOR
 
-        private InterfaceType _interfaceType;
-
-        private void Update()
-        {
-            if (!CanUpdate)
-                return;
-
-            var interfaceType = InterfaceUtil.GetInterfaceType(Application.platform, SystemInfo.deviceType);
-            if (interfaceType == _interfaceType)
-                return;
-
-            _interfaceType = interfaceType;
-            UpdateActiveImpl(interfaceType);
-        }
-
         private void Reset()
         {
             if (items == null)
-                items = new AdaptiveActivatorItem[] { };    
+                items = new AdaptiveActivatorItem[] { };
             else
-                ArrayUtility.Clear(ref items);
-            
-            ArrayUtility.Add(ref items, AdaptiveActivatorItem.New(null));
-        }
+                UnityEditor.ArrayUtility.Clear(ref items);
 
-        private void OnValidate()
-        {
-            if (!Application.isPlaying && isActiveAndEnabled)
-                EditorApplication.delayCall += UpdateActive;
+            UnityEditor.ArrayUtility.Add(ref items, AdaptiveActivatorItem.New(null));
         }
 
         #endif
 
-        private void UpdateActive()
-        {
-            if (!CanUpdate)
-                return;
-
-            var interfaceType = InterfaceUtil.GetInterfaceType(Application.platform, SystemInfo.deviceType);
-            UpdateActiveImpl(interfaceType);
-        }
-
-        private void UpdateActiveImpl(InterfaceType interfaceType)
+        private void UpdateActive(InterfaceType interfaceType)
         {
             foreach (var item in items)
             {

@@ -1,6 +1,4 @@
 using System.Linq;
-using Build1.UnityUI.Utils;
-using UnityEditor;
 using UnityEngine;
 
 namespace Build1.UnityUI.Adaptive
@@ -10,75 +8,37 @@ namespace Build1.UnityUI.Adaptive
     public sealed class AdaptiveScaler : MonoBehaviour
     {
         [SerializeField] public AdaptiveScalerItem[] items;
-        
-        private bool CanUpdate => isActiveAndEnabled && items != null && items.Length > 0;
-        
+
         private void Awake()
         {
-            if (Application.isPlaying)
-                ScreenUtil.OnResolutionChanged += UpdateScale;
+            UnityUI.OnInterfaceTypeChanged += UpdateScale;
         }
 
         private void OnEnable()
         {
-            UpdateScale();
+            UpdateScale(UnityUI.CurrentInterfaceType);
         }
 
         private void OnDestroy()
         {
-            if (Application.isPlaying)
-                ScreenUtil.OnResolutionChanged -= UpdateScale;
-            
-            #if UNITY_EDITOR
-                EditorApplication.delayCall -= UpdateScale;
-            #endif
+            UnityUI.OnInterfaceTypeChanged -= UpdateScale;
         }
 
         #if UNITY_EDITOR
 
-        private InterfaceType _interfaceType;
-
-        private void Update()
-        {
-            if (!CanUpdate)
-                return;
-
-            var interfaceType = InterfaceUtil.GetInterfaceType(Application.platform, SystemInfo.deviceType);
-            if (interfaceType == _interfaceType)
-                return;
-            
-            _interfaceType = interfaceType;
-            UpdateScaleImpl(interfaceType);
-        }
-        
         private void Reset()
         {
             if (items == null)
                 items = new AdaptiveScalerItem[] { };    
             else
-                ArrayUtility.Clear(ref items);
+                UnityEditor.ArrayUtility.Clear(ref items);
 
-            ArrayUtility.Add(ref items, AdaptiveScalerItem.New(gameObject));
-        }
-
-        private void OnValidate()
-        {
-            if (!Application.isPlaying && isActiveAndEnabled)
-                EditorApplication.delayCall += UpdateScale;
+            UnityEditor.ArrayUtility.Add(ref items, AdaptiveScalerItem.New(gameObject));
         }
 
         #endif
 
-        private void UpdateScale()
-        {
-            if (!CanUpdate)
-                return;
-
-            var interfaceType = InterfaceUtil.GetInterfaceType(Application.platform, SystemInfo.deviceType);
-            UpdateScaleImpl(interfaceType);
-        }
-
-        private void UpdateScaleImpl(InterfaceType interfaceType)
+        private void UpdateScale(InterfaceType interfaceType)
         {
             foreach (var item in items)
             {
