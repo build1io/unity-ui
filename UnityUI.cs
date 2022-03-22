@@ -43,11 +43,13 @@ namespace Build1.UnityUI
                 case UnityEditor.PlayModeStateChange.EnteredPlayMode:
                     DisposeAgent();
                     _agent = InitializeAgent(UnityUIAgentEditorRuntime.Create(GetRoot()));
+                    CurrentInterfaceType = _agent.GetInterfaceType();
                     break;
 
                 case UnityEditor.PlayModeStateChange.EnteredEditMode:
                     DisposeAgent();
                     _agent = InitializeAgent(UnityUIAgentEditor.Create());
+                    CurrentInterfaceType = _agent.GetInterfaceType();
                     break;
             }
         }
