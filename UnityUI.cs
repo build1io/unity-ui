@@ -7,11 +7,15 @@ namespace Build1.UnityUI
 {
     public static class UnityUI
     {
-        public static InterfaceType CurrentInterfaceType { get; private set; }
+        public static InterfaceType     CurrentInterfaceType { get; private set; }
+        public static ScreenOrientation DeviceOrientation    => _agent.DeviceOrientation;
+        public static int               ScreenWidth          => _agent.ScreenWidth;
+        public static int               ScreenHeight         => _agent.ScreenHeight;
 
-        public static event Action<InterfaceType>     OnInterfaceTypeChanged;
-        public static event Action<ScreenOrientation> OnDeviceOrientationChanged;
-        public static event Action                    OnScreenResolutionChanged;
+        public static event Action<InterfaceType> OnInterfaceTypeChanged;
+        public static event Action                OnDeviceOrientationChanged;
+        public static event Action                OnScreenResolutionChanged;
+        public static event Action                OnSomethingChanged;
 
         private static GameObject    _root;
         private static IUnityUIAgent _agent;
@@ -20,9 +24,9 @@ namespace Build1.UnityUI
         {
             if (!Application.isPlaying)
                 return;
-            
+
             _agent = InitializeAgent(UnityUIAgentRuntime.Create(GetRoot()));
-            
+
             CurrentInterfaceType = _agent.GetInterfaceType();
         }
 
@@ -76,15 +80,14 @@ namespace Build1.UnityUI
             var screenHeight = agent.ScreenHeight / Screen.dpi;
             return Mathf.Sqrt(Mathf.Pow(screenWidth, 2) + Mathf.Pow(screenHeight, 2));
         }
-        
+
         /*
          * Private.
          */
-        
+
         private static IUnityUIAgent InitializeAgent(IUnityUIAgent agent)
         {
-            agent.OnDeviceOrientationChanged += OnDeviceOrientationChangedHandler;
-            agent.OnScreenResolutionChanged += OnScreenResolutionChangedHandler;
+            agent.OnSomethingChanged += OnSomethingChangedHandler;
             return agent;
         }
 
@@ -93,8 +96,7 @@ namespace Build1.UnityUI
             if (_agent == null)
                 return;
 
-            _agent.OnDeviceOrientationChanged -= OnDeviceOrientationChangedHandler;
-            _agent.OnScreenResolutionChanged -= OnScreenResolutionChangedHandler;
+            _agent.OnSomethingChanged -= OnSomethingChangedHandler;
             _agent.Dispose();
             _agent = null;
         }
@@ -117,21 +119,31 @@ namespace Build1.UnityUI
          * Event Handlers.
          */
 
-        private static void OnDeviceOrientationChangedHandler()
+        private static void OnSomethingChangedHandler(bool deviceOrientationChanged, bool screenResolutionChanged)
         {
-            OnDeviceOrientationChanged?.Invoke(_agent.DeviceOrientation);
-        }
+            var interfaceTypeChanged = false;
 
-        private static void OnScreenResolutionChangedHandler()
-        {
-            var interfaceType = _agent.GetInterfaceType();
-            if (interfaceType != CurrentInterfaceType)
+            if (screenResolutionChanged)
             {
-                CurrentInterfaceType = interfaceType;
-                OnInterfaceTypeChanged?.Invoke(interfaceType);
+                var interfaceType = _agent.GetInterfaceType();
+                if (interfaceType != CurrentInterfaceType)
+                {
+                    CurrentInterfaceType = interfaceType;
+                    interfaceTypeChanged = true;
+                }
             }
 
-            OnScreenResolutionChanged?.Invoke();
+            if (deviceOrientationChanged)
+                OnDeviceOrientationChanged?.Invoke();
+
+            if (screenResolutionChanged)
+                OnScreenResolutionChanged?.Invoke();
+
+            if (interfaceTypeChanged)
+                OnInterfaceTypeChanged?.Invoke(CurrentInterfaceType);
+
+            if (deviceOrientationChanged || screenResolutionChanged)
+                OnSomethingChanged?.Invoke();
         }
     }
 }

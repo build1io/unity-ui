@@ -7,12 +7,10 @@ namespace Build1.UnityUI.Agents
     internal class UnityUIAgentRuntime : MonoBehaviour, IUnityUIAgent
     {
         public ScreenOrientation DeviceOrientation { get; private set; }
+        public int               ScreenWidth       { get; private set; }
+        public int               ScreenHeight      { get; private set; }
 
-        public int ScreenWidth  { get; private set; }
-        public int ScreenHeight { get; private set; }
-
-        public event Action OnScreenResolutionChanged;
-        public event Action OnDeviceOrientationChanged;
+        public event Action<bool, bool> OnSomethingChanged;
 
         private void Awake()
         {
@@ -23,20 +21,25 @@ namespace Build1.UnityUI.Agents
 
         private void Update()
         {
+            var deviceOrientationChanged = false;
+            var screenResolutionChanged = false;
+            var safeAreaChanged = false;
+            
             if (DeviceOrientation != Screen.orientation)
             {
                 DeviceOrientation = Screen.orientation;
-
-                OnDeviceOrientationChanged?.Invoke();
+                deviceOrientationChanged = true;
             }
 
             if (ScreenWidth != Screen.width || ScreenHeight != Screen.height)
             {
                 ScreenWidth = Screen.width;
                 ScreenHeight = Screen.height;
-
-                OnScreenResolutionChanged?.Invoke();
+                screenResolutionChanged = true;
             }
+            
+            if (deviceOrientationChanged || screenResolutionChanged || safeAreaChanged)
+                OnSomethingChanged?.Invoke(deviceOrientationChanged, screenResolutionChanged);
         }
 
         /*
@@ -47,7 +50,7 @@ namespace Build1.UnityUI.Agents
         {
             var platform = Application.platform;
             var deviceType = SystemInfo.deviceType;
-            
+
             switch (platform)
             {
                 case RuntimePlatform.IPhonePlayer:
@@ -86,11 +89,10 @@ namespace Build1.UnityUI.Agents
                     throw new ArgumentOutOfRangeException($"Unknown interface type. Platform: {platform} DeviceType: {deviceType}");
             }
         }
-        
+
         public void Dispose()
         {
-            OnScreenResolutionChanged = null;
-            OnDeviceOrientationChanged = null;
+            OnSomethingChanged = null;
         }
 
         /*

@@ -9,8 +9,7 @@ namespace Build1.UnityUI.Agents
         int               ScreenWidth       { get; }
         int               ScreenHeight      { get; }
 
-        event Action OnScreenResolutionChanged;
-        event Action OnDeviceOrientationChanged;
+        event Action<bool, bool> OnSomethingChanged;
 
         InterfaceType GetInterfaceType();
         void          Dispose();
