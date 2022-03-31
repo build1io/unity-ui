@@ -9,17 +9,14 @@ namespace Build1.UnityUI.Adaptive
     {
         [SerializeField] public AdaptiveScalerItem[] items;
 
-        private void Awake()
-        {
-            UnityUI.OnInterfaceTypeChanged += UpdateScale;
-        }
-
         private void OnEnable()
         {
+            UnityUI.OnInterfaceTypeChanged += UpdateScale;
+            
             UpdateScale(UnityUI.CurrentInterfaceType);
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             UnityUI.OnInterfaceTypeChanged -= UpdateScale;
         }
@@ -35,11 +32,22 @@ namespace Build1.UnityUI.Adaptive
 
             UnityEditor.ArrayUtility.Add(ref items, AdaptiveScalerItem.New(gameObject));
         }
+        
+        private void OnValidate()
+        {
+            UnityEditor.EditorApplication.delayCall += () =>
+            {
+                UpdateScale(UnityUI.CurrentInterfaceType);
+            };
+        }
 
         #endif
 
         private void UpdateScale(InterfaceType interfaceType)
         {
+            if (items == null)
+                return;
+            
             foreach (var item in items)
             {
                 if (item.gameObject == null)

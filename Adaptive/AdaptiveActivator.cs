@@ -8,17 +8,14 @@ namespace Build1.UnityUI.Adaptive
     {
         [SerializeField] public AdaptiveActivatorItem[] items;
 
-        private void Awake()
-        {
-            UnityUI.OnInterfaceTypeChanged += UpdateActive;
-        }
-
         private void OnEnable()
         {
+            UnityUI.OnInterfaceTypeChanged += UpdateActive;
+            
             UpdateActive(UnityUI.CurrentInterfaceType);
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             UnityUI.OnInterfaceTypeChanged -= UpdateActive;
         }
@@ -35,6 +32,14 @@ namespace Build1.UnityUI.Adaptive
             UnityEditor.ArrayUtility.Add(ref items, AdaptiveActivatorItem.New(null));
         }
 
+        private void OnValidate()
+        {
+            UnityEditor.EditorApplication.delayCall += () =>
+            {
+                UpdateActive(UnityUI.CurrentInterfaceType);
+            };
+        }
+        
         #endif
 
         private void UpdateActive(InterfaceType interfaceType)

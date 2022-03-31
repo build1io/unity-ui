@@ -10,17 +10,14 @@ namespace Build1.UnityUI.Adaptive
     {
         [SerializeField] public AdaptiveMarginItem[] items;
         
-        private void Awake()
-        {
-            UnityUI.OnInterfaceTypeChanged += UpdateMargin;
-        }
-
         private void OnEnable()
         {
+            UnityUI.OnInterfaceTypeChanged += UpdateMargin;
+            
             UpdateMargin(UnityUI.CurrentInterfaceType);
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             UnityUI.OnInterfaceTypeChanged -= UpdateMargin;
         }
@@ -35,6 +32,14 @@ namespace Build1.UnityUI.Adaptive
                 UnityEditor.ArrayUtility.Clear(ref items);
 
             UnityEditor.ArrayUtility.Add(ref items, AdaptiveMarginItem.New(GetComponent<RectTransform>()));
+        }
+
+        private void OnValidate()
+        {
+            UnityEditor.EditorApplication.delayCall += () =>
+            {
+                UpdateMargin(UnityUI.CurrentInterfaceType);
+            };
         }
 
         #endif

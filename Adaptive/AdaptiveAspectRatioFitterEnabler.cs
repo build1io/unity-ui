@@ -15,17 +15,14 @@ namespace Build1.UnityUI.Adaptive
         [SerializeField] public bool              stretch = true;
         [SerializeField] public bool              resetOffsetsWhenAspectRationFitterDisabled = true;
 
-        private void Awake()
-        {
-            UnityUI.OnInterfaceTypeChanged += UpdateAspectRatioFitter;
-        }
-
         private void OnEnable()
         {
+            UnityUI.OnInterfaceTypeChanged += UpdateAspectRatioFitter;
+            
             UpdateAspectRatioFitter(UnityUI.CurrentInterfaceType);
         }
         
-        private void OnDestroy()
+        private void OnDisable()
         {
             UnityUI.OnInterfaceTypeChanged -= UpdateAspectRatioFitter;
         }
@@ -39,6 +36,14 @@ namespace Build1.UnityUI.Adaptive
 
             if (rectTransform == null)
                 rectTransform = GetComponent<RectTransform>();
+        }
+        
+        private void OnValidate()
+        {
+            UnityEditor.EditorApplication.delayCall += () =>
+            {
+                UpdateAspectRatioFitter(UnityUI.CurrentInterfaceType);
+            };
         }
 
         #endif
