@@ -66,7 +66,11 @@ namespace Build1.UnityUI
 
         internal static bool IsTablet(IUnityUIAgent agent)
         {
-            return GetScreenDiagonalInches(agent) >= 7f && GetScreenAspectRatio(agent) < 2f;
+                var diagonal = GetScreenDiagonalInches(agent);
+                var aspect = GetScreenAspectRatio(agent);
+                if (aspect >= 1.77)
+                    return diagonal >= 7F;
+                return diagonal >= 5F;
         }
 
         internal static float GetScreenAspectRatio(IUnityUIAgent agent)
