@@ -46,6 +46,9 @@ namespace Build1.UnityUI.Adaptive
 
         private void UpdateMargin(InterfaceType interfaceType)
         {
+            if (items == null)
+                return;
+            
             foreach (var item in items)
             {
                 if (item.rectTransform == null)

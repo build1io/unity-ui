@@ -44,6 +44,9 @@ namespace Build1.UnityUI.Adaptive
 
         private void UpdateActive(InterfaceType interfaceType)
         {
+            if (items == null)
+                return;
+            
             foreach (var item in items)
             {
                 if (item.gameObject != null)
