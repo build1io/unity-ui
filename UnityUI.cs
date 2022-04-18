@@ -17,48 +17,19 @@ namespace Build1.UnityUI
         public static event Action                OnScreenResolutionChanged;
         public static event Action                OnSomethingChanged;
 
-        private static GameObject    _root;
-        private static IUnityUIAgent _agent;
+        private static          GameObject    _root;
+        private static readonly IUnityUIAgent _agent;
 
         static UnityUI()
         {
-            if (!Application.isPlaying)
-                return;
-
+            #if UNITY_EDITOR
+            _agent = InitializeAgent(UnityUIAgentEditor.Create());
+            #else
             _agent = InitializeAgent(UnityUIAgentRuntime.Create(GetRoot()));
+            #endif
 
             CurrentInterfaceType = _agent.GetInterfaceType();
         }
-
-        #if UNITY_EDITOR
-
-        [UnityEditor.InitializeOnLoadMethod]
-        private static void Initialize()
-        {
-            _agent = InitializeAgent(UnityUIAgentEditor.Create());
-
-            UnityEditor.EditorApplication.playModeStateChanged += OnPlayModeChanged;
-        }
-
-        private static void OnPlayModeChanged(UnityEditor.PlayModeStateChange state)
-        {
-            switch (state)
-            {
-                case UnityEditor.PlayModeStateChange.EnteredPlayMode:
-                    DisposeAgent();
-                    _agent = InitializeAgent(UnityUIAgentEditorRuntime.Create(GetRoot()));
-                    CurrentInterfaceType = _agent.GetInterfaceType();
-                    break;
-
-                case UnityEditor.PlayModeStateChange.EnteredEditMode:
-                    DisposeAgent();
-                    _agent = InitializeAgent(UnityUIAgentEditor.Create());
-                    CurrentInterfaceType = _agent.GetInterfaceType();
-                    break;
-            }
-        }
-
-        #endif
 
         /*
          * Public.
@@ -66,11 +37,11 @@ namespace Build1.UnityUI
 
         internal static bool IsTablet(IUnityUIAgent agent)
         {
-                var diagonal = GetScreenDiagonalInches(agent);
-                var aspect = GetScreenAspectRatio(agent);
-                if (aspect >= 1.77)
-                    return diagonal >= 7F;
-                return diagonal >= 5F;
+            var diagonal = GetScreenDiagonalInches(agent);
+            var aspect = GetScreenAspectRatio(agent);
+            if (aspect >= 1.77)
+                return diagonal >= 7F;
+            return diagonal >= 5F;
         }
 
         internal static float GetScreenAspectRatio(IUnityUIAgent agent)
@@ -95,23 +66,13 @@ namespace Build1.UnityUI
             return agent;
         }
 
-        private static void DisposeAgent()
-        {
-            if (_agent == null)
-                return;
-
-            _agent.OnSomethingChanged -= OnSomethingChangedHandler;
-            _agent.Dispose();
-            _agent = null;
-        }
-
         /*
          * Private.
          */
 
         private static GameObject GetRoot()
         {
-            if (_root != null)
+            if (_root)
                 return _root;
 
             _root = new GameObject("[UnityUI]");
