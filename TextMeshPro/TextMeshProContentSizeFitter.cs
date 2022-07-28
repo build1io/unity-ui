@@ -111,7 +111,7 @@ namespace Build1.UnityUI.TextMeshPro
                 {
                     FitMode.Unconstrained => _textMeshProUGUI.rectTransform.sizeDelta.y,
                     FitMode.MinSize       => Mathf.Max(Mathf.Min(_textMeshProUGUI.minHeight, _heightMax), _heightMin),
-                    FitMode.PreferredSize => Mathf.Max(Mathf.Min(_textMeshProUGUI.preferredWidth, _heightMax), _heightMin),
+                    FitMode.PreferredSize => Mathf.Max(Mathf.Min(_textMeshProUGUI.preferredHeight, _heightMax), _heightMin),
                     _                     => throw new ArgumentOutOfRangeException()
                 }
             };
