@@ -26,9 +26,9 @@ namespace Build1.UnityUI.Adaptive.Editor
 
             EGUI.Horizontally(() =>
             {
-                EGUI.Label("Managed Objects", FontStyle.Bold);
+                EGUI.Label("Managed Objects", EGUI.FontStyle(FontStyle.Bold));
                 EGUI.Space();
-                EGUI.Label("Count:", 40);
+                EGUI.Label("Count:", EGUI.Width(40));
                 EGUI.Int(items.arraySize, 50, value => { items.arraySize = value; });
             });
 
@@ -36,7 +36,7 @@ namespace Build1.UnityUI.Adaptive.Editor
             {
                 EGUI.Horizontally(() =>
                 {
-                    EGUI.Label("Game Object", 200);
+                    EGUI.Label("Game Object", EGUI.Width(200));
                     EGUI.Label("Scales");
                 });
                 EGUI.Space(2);
@@ -63,7 +63,7 @@ namespace Build1.UnityUI.Adaptive.Editor
                                 
                                 EGUI.Horizontally(() =>
                                 {
-                                    EGUI.Label(subItem.interfaceType.ToString(), 75);
+                                    EGUI.Label(subItem.interfaceType.ToString(), EGUI.Width(75));
                                     EGUI.Float(subItem.scale, scaleNew =>
                                     {
                                         subItem.scale = scaleNew;

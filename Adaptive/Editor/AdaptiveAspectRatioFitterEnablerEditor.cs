@@ -19,7 +19,7 @@ namespace Build1.UnityUI.Adaptive.Editor
 
             EGUI.Horizontally(() =>
             {
-                EGUI.Label("Enabled on Interfaces", 200);
+                EGUI.Label("Enabled on Interfaces", EGUI.Width(200));
                 EGUI.Enum(targetObject.interfaceType, EnumRenderMode.DropDown, valueNew =>
                 {
                     targetObject.interfaceType = (InterfaceType)valueNew;
@@ -29,7 +29,7 @@ namespace Build1.UnityUI.Adaptive.Editor
 
             EGUI.Horizontally(() =>
             {
-                EGUI.Label("Stretch", 200);
+                EGUI.Label("Stretch", EGUI.Width(200));
                 EGUI.Checkbox(targetObject.stretch, valueNew =>
                 {
                     targetObject.stretch = valueNew;
@@ -39,7 +39,7 @@ namespace Build1.UnityUI.Adaptive.Editor
             
             EGUI.Horizontally(() =>
             {
-                EGUI.Label("Reset offsets when ARF disabled", 200);
+                EGUI.Label("Reset offsets when ARF disabled", EGUI.Width(200));
                 EGUI.Checkbox(targetObject.resetOffsetsWhenAspectRationFitterDisabled, valueNew =>
                 {
                     targetObject.resetOffsetsWhenAspectRationFitterDisabled = valueNew;

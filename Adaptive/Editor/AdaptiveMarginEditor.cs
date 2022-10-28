@@ -25,9 +25,9 @@ namespace Build1.UnityUI.Adaptive.Editor
 
             EGUI.Horizontally(() =>
             {
-                EGUI.Label("Managed Objects", FontStyle.Bold);
+                EGUI.Label("Managed Objects", EGUI.FontStyle(FontStyle.Bold));
                 EGUI.Space();
-                EGUI.Label("Count:", 40);
+                EGUI.Label("Count:", EGUI.Width(40));
                 EGUI.Int(items.arraySize, 50, value => { items.arraySize = value; });
             });
 
@@ -36,12 +36,12 @@ namespace Build1.UnityUI.Adaptive.Editor
                 EGUI.Horizontally(() =>
                 {
                     EGUI.Label("Rect Transform");
-                    EGUI.Label(" Interface", 75);
-                    EGUI.Label("Left", 60);
-                    EGUI.Label("Right", 60);
-                    EGUI.Label("Top", 60);
-                    EGUI.Label("Bottom", 60);
-                    EGUI.Label(string.Empty, 30);
+                    EGUI.Label(" Interface", EGUI.Width(75));
+                    EGUI.Label("Left", EGUI.Width(60));
+                    EGUI.Label("Right", EGUI.Width(60));
+                    EGUI.Label("Top", EGUI.Width(60));
+                    EGUI.Label("Bottom", EGUI.Width(60));
+                    EGUI.Label(string.Empty, EGUI.Width(30));
                 });
                 EGUI.Space(2);
                 
@@ -65,7 +65,7 @@ namespace Build1.UnityUI.Adaptive.Editor
                                 
                                 EGUI.Horizontally(() =>
                                 {
-                                    EGUI.Label(subItem.interfaceType.ToString(), 75);
+                                    EGUI.Label(subItem.interfaceType.ToString(), EGUI.Width(75));
                                     
                                     EGUI.Int(subItem.padding.left, 60, left =>
                                     {
