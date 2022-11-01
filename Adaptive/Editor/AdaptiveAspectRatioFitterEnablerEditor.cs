@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 
 using Build1.UnityEGUI;
+using Build1.UnityEGUI.Editors;
 using Build1.UnityEGUI.RenderModes;
 using UnityEditor;
 using UnityEngine;
@@ -8,9 +9,9 @@ using UnityEngine;
 namespace Build1.UnityUI.Adaptive.Editor
 {
     [CustomEditor(typeof(AdaptiveAspectRatioFitterEnabler))]
-    public sealed class AdaptiveAspectRatioFitterEnablerEditor : UnityEditor.Editor
+    public sealed class AdaptiveAspectRatioFitterEnablerEditor : EGUIEditor
     {
-        public override void OnInspectorGUI()
+        protected override void OnEGUI()
         {
             serializedObject.Update();
 

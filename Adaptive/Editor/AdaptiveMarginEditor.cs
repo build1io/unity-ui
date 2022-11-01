@@ -1,13 +1,14 @@
 #if UNITY_EDITOR
 
 using Build1.UnityEGUI;
+using Build1.UnityEGUI.Editors;
 using UnityEditor;
 using UnityEngine;
 
 namespace Build1.UnityUI.Adaptive.Editor
 {
     [CustomEditor(typeof(AdaptiveMargin))]
-    public sealed class AdaptiveMarginEditor : UnityEditor.Editor
+    public sealed class AdaptiveMarginEditor : EGUIEditor
     {
         private SerializedProperty items;
 
@@ -16,7 +17,7 @@ namespace Build1.UnityUI.Adaptive.Editor
             items = serializedObject.FindProperty("items");
         }
 
-        public override void OnInspectorGUI()
+        protected override void OnEGUI()
         {
             serializedObject.Update();
 
@@ -94,7 +95,7 @@ namespace Build1.UnityUI.Adaptive.Editor
                             }
                         });
             
-                        if (EGUI.Button("-", 30, 18, new RectOffset(1, 1, 0, 2)))
+                        if (EGUI.Button("-", EGUI.Size(30, 18), EGUI.Padding(new RectOffset(1, 1, 0, 2))).Clicked())
                             ArrayUtility.Remove(ref targetObject.items, item);
                     });
                     EGUI.Space(2);
@@ -103,7 +104,7 @@ namespace Build1.UnityUI.Adaptive.Editor
                 EGUI.Horizontally(() =>
                 {
                     EGUI.Space();
-                    if (EGUI.Button("+", 30, 25, new RectOffset(1, 1, 0, 2)))
+                    if (EGUI.Button("+", EGUI.Size(30, 25), EGUI.Padding(new RectOffset(1, 1, 0, 2))).Clicked())
                         ArrayUtility.Add(ref targetObject.items, AdaptiveMarginItem.New(null));
                 });
             
