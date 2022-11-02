@@ -54,12 +54,12 @@ namespace Build1.UnityUI.Agents
             switch (platform)
             {
                 case RuntimePlatform.IPhonePlayer:
-                    return UnityUI.IsTablet(this) ? InterfaceType.Tablet : InterfaceType.Phone;
+                    return UnityUI.IsTablet() ? InterfaceType.Tablet : InterfaceType.Phone;
 
                 case RuntimePlatform.Android:
                     return deviceType switch
                     {
-                        DeviceType.Handheld => UnityUI.IsTablet(this) ? InterfaceType.Tablet : InterfaceType.Phone,
+                        DeviceType.Handheld => UnityUI.IsTablet() ? InterfaceType.Tablet : InterfaceType.Phone,
                         DeviceType.Console  => InterfaceType.Console,
                         DeviceType.Desktop  => InterfaceType.Desktop,
                         _                   => throw new ArgumentOutOfRangeException($"Unknown interface type. Platform: {platform} DeviceType: {deviceType}")

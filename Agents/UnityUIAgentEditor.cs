@@ -28,7 +28,7 @@ namespace Build1.UnityUI.Agents
 
         public InterfaceType GetInterfaceType()
         {
-            return GetInterfaceTypeStatic(this);
+            return GetInterfaceTypeStatic();
         }
 
         public void Dispose()
@@ -74,14 +74,14 @@ namespace Build1.UnityUI.Agents
             return new UnityUIAgentEditor();
         }
 
-        public static InterfaceType GetInterfaceTypeStatic(IUnityUIAgent agent)
+        public static InterfaceType GetInterfaceTypeStatic()
         {
             var target = EditorUserBuildSettings.activeBuildTarget;
             switch (target)
             {
                 case BuildTarget.iOS:
                 case BuildTarget.Android:
-                    return UnityUI.IsTablet(agent) ? InterfaceType.Tablet : InterfaceType.Phone;
+                    return UnityUI.IsTablet() ? InterfaceType.Tablet : InterfaceType.Phone;
 
                 case BuildTarget.StandaloneOSX:
                 case BuildTarget.StandaloneWindows:

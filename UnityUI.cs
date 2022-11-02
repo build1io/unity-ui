@@ -1,7 +1,6 @@
 using System;
 using Build1.UnityUI.Agents;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Build1.UnityUI
 {
@@ -17,15 +16,21 @@ namespace Build1.UnityUI
         public static event Action                OnScreenResolutionChanged;
         public static event Action                OnSomethingChanged;
 
-        private static          GameObject    _root;
         private static readonly IUnityUIAgent _agent;
 
         static UnityUI()
         {
             #if UNITY_EDITOR
+            
             _agent = InitializeAgent(UnityUIAgentEditor.Create());
+            
             #else
-            _agent = InitializeAgent(UnityUIAgentRuntime.Create(GetRoot()));
+            
+            var root = new GameObject("[UnityUI]");
+            UnityEngine.Object.DontDestroyOnLoad(root);    
+            
+            _agent = InitializeAgent(UnityUIAgentRuntime.Create(root));
+            
             #endif
 
             CurrentInterfaceType = _agent.GetInterfaceType();
@@ -34,26 +39,26 @@ namespace Build1.UnityUI
         /*
          * Public.
          */
-
-        internal static bool IsTablet(IUnityUIAgent agent)
+        
+        public static float GetScreenAspectRatio()
         {
-            var diagonal = GetScreenDiagonalInches(agent);
-            var aspect = GetScreenAspectRatio(agent);
+            return Mathf.Max((float)_agent.ScreenWidth, _agent.ScreenHeight) / Mathf.Min(_agent.ScreenWidth, _agent.ScreenHeight);
+        }
+
+        public static float GetScreenDiagonalInches()
+        {
+            var screenWidth = _agent.ScreenWidth / Screen.dpi;
+            var screenHeight = _agent.ScreenHeight / Screen.dpi;
+            return Mathf.Sqrt(Mathf.Pow(screenWidth, 2) + Mathf.Pow(screenHeight, 2));
+        }
+
+        internal static bool IsTablet()
+        {
+            var diagonal = GetScreenDiagonalInches();
+            var aspect = GetScreenAspectRatio();
             if (aspect >= 1.77)
                 return diagonal >= 7F;
             return diagonal >= 5F;
-        }
-
-        internal static float GetScreenAspectRatio(IUnityUIAgent agent)
-        {
-            return Mathf.Max((float)agent.ScreenWidth, agent.ScreenHeight) / Mathf.Min(agent.ScreenWidth, agent.ScreenHeight);
-        }
-
-        internal static float GetScreenDiagonalInches(IUnityUIAgent agent)
-        {
-            var screenWidth = agent.ScreenWidth / Screen.dpi;
-            var screenHeight = agent.ScreenHeight / Screen.dpi;
-            return Mathf.Sqrt(Mathf.Pow(screenWidth, 2) + Mathf.Pow(screenHeight, 2));
         }
 
         /*
@@ -64,20 +69,6 @@ namespace Build1.UnityUI
         {
             agent.OnSomethingChanged += OnSomethingChangedHandler;
             return agent;
-        }
-
-        /*
-         * Private.
-         */
-
-        private static GameObject GetRoot()
-        {
-            if (_root)
-                return _root;
-
-            _root = new GameObject("[UnityUI]");
-            Object.DontDestroyOnLoad(_root);
-            return _root;
         }
 
         /*
