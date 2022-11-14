@@ -2,6 +2,7 @@
 
 using System.Linq;
 using Build1.UnityEGUI;
+using Build1.UnityEGUI.Editors;
 using Build1.UnityEGUI.RenderModes;
 using UnityEditor;
 using UnityEngine;
@@ -9,7 +10,7 @@ using UnityEngine;
 namespace Build1.UnityUI.Adaptive.Editor
 {
     [CustomEditor(typeof(AdaptiveActivator)), CanEditMultipleObjects]
-    public sealed class AdaptiveActivatorEditor : UnityEditor.Editor
+    public sealed class AdaptiveActivatorEditor : EGUIEditor
     {
         private SerializedProperty items;
 
@@ -18,7 +19,7 @@ namespace Build1.UnityUI.Adaptive.Editor
             items = serializedObject.FindProperty("items");
         }
 
-        public override void OnInspectorGUI()
+        protected override void OnEGUI()
         {
             serializedObject.Update();
 
@@ -34,17 +35,18 @@ namespace Build1.UnityUI.Adaptive.Editor
 
             EGUI.Horizontally(() =>
             {
-                EGUI.Label("Managed Objects", FontStyle.Bold);
+                EGUI.Label("Managed Objects", EGUI.FontStyle(FontStyle.Bold));
                 EGUI.Space();
-                EGUI.Label("Count:", 40);
-                EGUI.Int(items.arraySize, 50, value => { items.arraySize = value; });
+                EGUI.Label("Count:", EGUI.Width(40));
+                EGUI.Int(items.arraySize, EGUI.Width(50))
+                    .OnChange(value => { items.arraySize = value; });
             });
 
             EGUI.Panel(10, () =>
             {
                 EGUI.Horizontally(() =>
                 {
-                    EGUI.Label("Game Object", 200);
+                    EGUI.Label("Game Object", EGUI.Width(200));
                     EGUI.Label("Active on Interfaces");
                 });
                 EGUI.Space(2);
@@ -67,7 +69,7 @@ namespace Build1.UnityUI.Adaptive.Editor
                             propertiesChanged = true;
                         });
 
-                        if (EGUI.Button("-", 30, 18, new RectOffset(1, 1, 0, 2)))
+                        if (EGUI.Button("-", EGUI.Size(30, 18), EGUI.Padding(new RectOffset(1, 1, 0, 2))).Clicked())
                             ArrayUtility.Remove(ref targetObject.items, item);
                     });
                     EGUI.Space(2);
@@ -76,7 +78,7 @@ namespace Build1.UnityUI.Adaptive.Editor
                 EGUI.Horizontally(() =>
                 {
                     EGUI.Space();
-                    if (EGUI.Button("+", 30, 25, new RectOffset(1, 1, 0, 2)))
+                    if (EGUI.Button("+", EGUI.Size(30, 25), EGUI.Padding(new RectOffset(1, 1, 0, 2))).Clicked())
                         ArrayUtility.Add(ref targetObject.items, AdaptiveActivatorItem.New(null));
                 });
 
