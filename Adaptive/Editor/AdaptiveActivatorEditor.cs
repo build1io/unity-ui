@@ -38,7 +38,8 @@ namespace Build1.UnityUI.Adaptive.Editor
                 EGUI.Label("Managed Objects", EGUI.FontStyle(FontStyle.Bold));
                 EGUI.Space();
                 EGUI.Label("Count:", EGUI.Width(40));
-                EGUI.Int(items.arraySize, 50, value => { items.arraySize = value; });
+                EGUI.Int(items.arraySize, EGUI.Width(50))
+                    .OnChange(value => { items.arraySize = value; });
             });
 
             EGUI.Panel(10, () =>
