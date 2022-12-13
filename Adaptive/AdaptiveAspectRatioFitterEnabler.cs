@@ -50,6 +50,9 @@ namespace Build1.UnityUI.Adaptive
 
         private void UpdateAspectRatioFitter(InterfaceType currentInterfaceType)
         {
+            if (!aspectRatioFitter)
+                return;
+            
             aspectRatioFitter.enabled = (interfaceType & currentInterfaceType) == currentInterfaceType;
 
             if (stretch)
