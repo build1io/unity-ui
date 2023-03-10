@@ -132,7 +132,14 @@ namespace Build1.UnityUI.Animation
          * Public.
          */
 
-        public void Play()  { enabled = true; }
+        public void Play()
+        {
+            if (_frame == TotalFrames - 1)
+                _frame = 0;
+            
+            enabled = true;
+        }
+        
         public void Pause() { enabled = false; }
 
         /*
