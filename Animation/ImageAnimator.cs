@@ -16,8 +16,8 @@ namespace Build1.UnityUI.Animation
         [SerializeField] private bool            loop        = true;
         [SerializeField] private bool            playOnAwake = true;
         [SerializeField] private Sprite[]        sprites;
-        [SerializeField] private UnityEvent<int> onFrameChanged = new UnityEvent<int>();
-        [SerializeField] private UnityEvent      onComplete     = new UnityEvent();
+        [SerializeField] private UnityEvent<int> onFrameChanged = new();
+        [SerializeField] private UnityEvent      onComplete     = new();
 
         public Sprite[] Sprites
         {
@@ -139,8 +139,11 @@ namespace Build1.UnityUI.Animation
 
         public void Play()
         {
-            if (_frame == TotalFrames - 1)
-                _frame = 0;
+            if (!Reverse)
+            {
+                if (_frame == TotalFrames - 1)
+                    _frame = 0;    
+            }
             
             enabled = true;
         }
