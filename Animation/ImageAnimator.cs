@@ -12,6 +12,7 @@ namespace Build1.UnityUI.Animation
         [SerializeField] private Image           image;
         [SerializeField] private float           framesPerSecond = 24;
         [SerializeField] private int             startFrame;
+        [SerializeField] private int             previewFrame = -1;
         [SerializeField] private bool            loop        = true;
         [SerializeField] private bool            playOnAwake = true;
         [SerializeField] private Sprite[]        sprites;
@@ -87,21 +88,25 @@ namespace Build1.UnityUI.Animation
             _revalidate = true;
 
             if (!Application.isPlaying)
-                UpdateStartFrame();
+                UpdatePreviewFrame();
         }
 
-        private void UpdateStartFrame()
+        private void UpdatePreviewFrame()
         {
-            var image = GetComponent<Image>();
-            if (image == null)
-                return;
-
+            if (!image)
+                image = GetComponent<Image>();
+            
             if (sprites == null)
                 return;
-
-            startFrame = Mathf.Max(Mathf.Min(startFrame, sprites.Length - 1), 0);
-            if (startFrame < sprites.Length)
-                image.sprite = sprites[startFrame];
+            
+            int frame;
+            if (previewFrame <= -1)
+                frame = Mathf.Max(Mathf.Min(startFrame, sprites.Length - 1), 0);
+            else
+                frame = Mathf.Max(Mathf.Min(previewFrame, sprites.Length - 1), 0);    
+            
+            if (frame < sprites.Length)
+                image.sprite = sprites[frame];
         }
 
         private void EditorUpdate()
@@ -139,8 +144,11 @@ namespace Build1.UnityUI.Animation
             
             enabled = true;
         }
-        
-        public void Pause() { enabled = false; }
+
+        public void Pause()
+        {
+            enabled = false;
+        }
 
         /*
          * Private.

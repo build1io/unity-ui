@@ -13,6 +13,7 @@ namespace Build1.UnityUI.Animation
         
         private SerializedProperty framesPerSecondProperty;
         private SerializedProperty startFrameProperty;
+        private SerializedProperty previewFrameProperty;
         private SerializedProperty loopProperty;
         private SerializedProperty playOnAwakeProperty;
         private SerializedProperty spritesProperty;
@@ -23,6 +24,7 @@ namespace Build1.UnityUI.Animation
         {
             framesPerSecondProperty = serializedObject.FindProperty("framesPerSecond");
             startFrameProperty = serializedObject.FindProperty("startFrame");
+            previewFrameProperty = serializedObject.FindProperty("previewFrame");
             loopProperty = serializedObject.FindProperty("loop");
             playOnAwakeProperty = serializedObject.FindProperty("playOnAwake");
             spritesProperty = serializedObject.FindProperty("sprites");
@@ -36,6 +38,7 @@ namespace Build1.UnityUI.Animation
             
             EditorGUILayout.PropertyField(framesPerSecondProperty);
             EditorGUILayout.PropertyField(startFrameProperty);
+            EditorGUILayout.PropertyField(previewFrameProperty);
             EditorGUILayout.PropertyField(loopProperty);
             EditorGUILayout.PropertyField(playOnAwakeProperty);
             EditorGUILayout.Space(7);
