@@ -12,7 +12,11 @@ namespace Build1.UnityUI.Animation
         [SerializeField] private Image           image;
         [SerializeField] private float           framesPerSecond = 24;
         [SerializeField] private int             startFrame;
+        
+        #pragma warning disable 414
         [SerializeField] private int             previewFrame = -1;
+        #pragma warning restore 414
+        
         [SerializeField] private bool            loop        = true;
         [SerializeField] private bool            playOnAwake = true;
         [SerializeField] private Sprite[]        sprites;
