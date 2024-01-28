@@ -24,7 +24,11 @@ namespace Build1.UnityUI.TextMeshPro
         [SerializeField] private float           _heightMax;
 
         public FitMode HorizontalFit => _horizontalFit;
+        public float   WidthMin      => _widthMin;
+        public float   WidthMax      => _widthMax;
         public FitMode VerticalFit   => _verticalFit;
+        public float   HeightMin     => _heightMin;
+        public float   HeightMax     => _heightMax;
 
         private void OnEnable()
         {
@@ -54,18 +58,18 @@ namespace Build1.UnityUI.TextMeshPro
 
         #if UNITY_EDITOR
 
-        [NonSerialized] private Vector2 _lastSize; 
-        
+        [NonSerialized] private Vector2 _lastSize;
+
         private void Awake()
         {
             if (_textMeshProUGUI != null)
                 return;
-            
+
             _textMeshProUGUI = GetComponent<TextMeshProUGUI>();
-            
+
             _widthMin = _textMeshProUGUI.minWidth;
             _widthMax = _textMeshProUGUI.preferredWidth;
-            
+
             _heightMin = _textMeshProUGUI.minHeight;
             _heightMax = _textMeshProUGUI.preferredHeight;
         }
@@ -74,7 +78,7 @@ namespace Build1.UnityUI.TextMeshPro
         {
             if (_lastSize.x == _textMeshProUGUI.preferredWidth && _lastSize.y == _textMeshProUGUI.preferredHeight)
                 return;
-            
+
             _lastSize = new Vector2(_textMeshProUGUI.preferredWidth, _textMeshProUGUI.preferredHeight);
             UpdateRectTransform();
         }
