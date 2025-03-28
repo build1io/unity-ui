@@ -7,13 +7,13 @@ namespace Build1.UnityUI
     public static class UnityUI
     {
         public static InterfaceType     CurrentInterfaceType { get; private set; }
-        public static ScreenOrientation DeviceOrientation    => _agent.DeviceOrientation;
+        public static ScreenOrientation ScreenOrientation    => _agent.ScreenOrientation;
         public static int               ScreenWidth          => _agent.ScreenWidth;
         public static int               ScreenHeight         => _agent.ScreenHeight;
         public static float             ScreenDPI            => Screen.dpi;
 
         public static event Action<InterfaceType> OnInterfaceTypeChanged;
-        public static event Action                OnDeviceOrientationChanged;
+        public static event Action                OnScreenOrientationChanged;
         public static event Action                OnScreenResolutionChanged;
         public static event Action                OnSomethingChanged;
 
@@ -72,7 +72,7 @@ namespace Build1.UnityUI
          * Event Handlers.
          */
 
-        private static void OnSomethingChangedHandler(bool deviceOrientationChanged, bool screenResolutionChanged)
+        private static void OnSomethingChangedHandler(bool screenOrientationChanged, bool screenResolutionChanged)
         {
             var interfaceTypeChanged = false;
 
@@ -86,8 +86,8 @@ namespace Build1.UnityUI
                 }
             }
 
-            if (deviceOrientationChanged)
-                OnDeviceOrientationChanged?.Invoke();
+            if (screenOrientationChanged)
+                OnScreenOrientationChanged?.Invoke();
 
             if (screenResolutionChanged)
                 OnScreenResolutionChanged?.Invoke();
@@ -95,7 +95,7 @@ namespace Build1.UnityUI
             if (interfaceTypeChanged)
                 OnInterfaceTypeChanged?.Invoke(CurrentInterfaceType);
 
-            if (deviceOrientationChanged || screenResolutionChanged)
+            if (screenOrientationChanged || screenResolutionChanged)
                 OnSomethingChanged?.Invoke();
         }
     }

@@ -5,7 +5,7 @@ namespace Build1.UnityUI.Agents
 {
     internal interface IUnityUIAgent
     {
-        ScreenOrientation DeviceOrientation { get; }
+        ScreenOrientation ScreenOrientation { get; }
         int               ScreenWidth       { get; }
         int               ScreenHeight      { get; }
 

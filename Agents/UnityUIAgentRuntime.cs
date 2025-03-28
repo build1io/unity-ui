@@ -6,7 +6,7 @@ namespace Build1.UnityUI.Agents
     [DisallowMultipleComponent]
     internal class UnityUIAgentRuntime : MonoBehaviour, IUnityUIAgent
     {
-        public ScreenOrientation DeviceOrientation { get; private set; }
+        public ScreenOrientation ScreenOrientation { get; private set; }
         public int               ScreenWidth       { get; private set; }
         public int               ScreenHeight      { get; private set; }
 
@@ -14,7 +14,7 @@ namespace Build1.UnityUI.Agents
 
         private void Awake()
         {
-            DeviceOrientation = Screen.orientation;
+            ScreenOrientation = Screen.orientation;
             ScreenWidth = Screen.width;
             ScreenHeight = Screen.height;
         }
@@ -25,9 +25,9 @@ namespace Build1.UnityUI.Agents
             var screenResolutionChanged = false;
             var safeAreaChanged = false;
             
-            if (DeviceOrientation != Screen.orientation)
+            if (ScreenOrientation != Screen.orientation)
             {
-                DeviceOrientation = Screen.orientation;
+                ScreenOrientation = Screen.orientation;
                 deviceOrientationChanged = true;
             }
 
