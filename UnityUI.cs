@@ -53,7 +53,7 @@ namespace Build1.UnityUI
             var screenHeight = _agent.ScreenHeight / Screen.dpi;
             return Mathf.Sqrt(Mathf.Pow(screenWidth, 2) + Mathf.Pow(screenHeight, 2));
         }
-        
+
         public static void SetAvailableOrientations(ScreenOrientations orientations)
         {
             switch (orientations)
@@ -76,18 +76,6 @@ namespace Build1.UnityUI
             var autorotateToPortraitUpsideDown = (orientations & ScreenOrientations.PortraitUpsideDown) == ScreenOrientations.PortraitUpsideDown;
             var autorotateToLandscapeLeft = (orientations & ScreenOrientations.LandscapeLeft) == ScreenOrientations.LandscapeLeft;
             var autorotateToLandscapeRight = (orientations & ScreenOrientations.LandscapeRight) == ScreenOrientations.LandscapeRight;
-
-            if (Screen.orientation != ScreenOrientation.AutoRotation)
-            {
-                if (autorotateToPortrait)
-                    Screen.orientation = ScreenOrientation.Portrait;
-                else if (autorotateToLandscapeLeft)
-                    Screen.orientation = ScreenOrientation.LandscapeLeft;
-                else if (autorotateToLandscapeRight)
-                    Screen.orientation = ScreenOrientation.LandscapeRight;
-                else if (autorotateToPortraitUpsideDown)
-                    Screen.orientation = ScreenOrientation.PortraitUpsideDown;
-            }
 
             Screen.autorotateToPortrait = autorotateToPortrait;
             Screen.autorotateToPortraitUpsideDown = autorotateToPortraitUpsideDown;

@@ -5,10 +5,9 @@ namespace Build1.UnityUI
     [Flags]
     public enum ScreenOrientations
     {
-        Unknown            = 1 << 0,
-        Portrait           = 1 << 1,
-        PortraitUpsideDown = 1 << 2,
-        LandscapeLeft      = 1 << 3,
-        LandscapeRight     = 1 << 4
+        Portrait           = 1 << 0,
+        PortraitUpsideDown = 1 << 1,
+        LandscapeLeft      = 1 << 2,
+        LandscapeRight     = 1 << 3
     }
 }
