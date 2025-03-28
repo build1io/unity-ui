@@ -8,14 +8,18 @@ namespace Build1.UnityUI.Agents
 {
     internal sealed class UnityUIAgentEditor : IUnityUIAgent
     {
+        public DeviceOrientation DeviceOrientation { get; private set; }
         public ScreenOrientation ScreenOrientation { get; private set; }
         public int               ScreenWidth       { get; private set; }
         public int               ScreenHeight      { get; private set; }
 
+        public event Action             OnDeviceOrientationChanged;
         public event Action<bool, bool> OnSomethingChanged;
 
         public UnityUIAgentEditor()
         {
+            DeviceOrientation = Input.deviceOrientation;
+            ScreenOrientation = Screen.orientation;
             ScreenWidth = Screen.currentResolution.width;
             ScreenHeight = Screen.currentResolution.height;
 
@@ -31,13 +35,6 @@ namespace Build1.UnityUI.Agents
             return GetInterfaceTypeStatic();
         }
 
-        public void Dispose()
-        {
-            EditorApplication.update -= OnUpdate;
-
-            OnSomethingChanged = null;
-        }
-
         /*
          * Private.
          */
@@ -46,6 +43,12 @@ namespace Build1.UnityUI.Agents
         {
             var screenOrientationChanged = false;
             var screenResolutionChanged = false;
+
+            if (DeviceOrientation != Input.deviceOrientation)
+            {
+                DeviceOrientation = Input.deviceOrientation;
+                OnDeviceOrientationChanged?.Invoke();
+            }
 
             if (ScreenOrientation != Screen.orientation)
             {
@@ -60,7 +63,7 @@ namespace Build1.UnityUI.Agents
 
                 screenResolutionChanged = true;
             }
-
+            
             if (screenOrientationChanged || screenResolutionChanged)
                 OnSomethingChanged?.Invoke(screenOrientationChanged, screenResolutionChanged);
         }

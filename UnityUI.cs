@@ -7,12 +7,14 @@ namespace Build1.UnityUI
     public static class UnityUI
     {
         public static InterfaceType     CurrentInterfaceType { get; private set; }
+        public static DeviceOrientation DeviceOrientation    => _agent.DeviceOrientation;
         public static ScreenOrientation ScreenOrientation    => _agent.ScreenOrientation;
         public static int               ScreenWidth          => _agent.ScreenWidth;
         public static int               ScreenHeight         => _agent.ScreenHeight;
         public static float             ScreenDPI            => Screen.dpi;
 
         public static event Action<InterfaceType> OnInterfaceTypeChanged;
+        public static event Action                OnDeviceOrientationChanged;
         public static event Action                OnScreenOrientationChanged;
         public static event Action                OnScreenResolutionChanged;
         public static event Action                OnSomethingChanged;
@@ -51,6 +53,48 @@ namespace Build1.UnityUI
             var screenHeight = _agent.ScreenHeight / Screen.dpi;
             return Mathf.Sqrt(Mathf.Pow(screenWidth, 2) + Mathf.Pow(screenHeight, 2));
         }
+        
+        public static void SetAvailableOrientations(ScreenOrientations orientations)
+        {
+            switch (orientations)
+            {
+                case ScreenOrientations.Portrait:
+                    Screen.orientation = ScreenOrientation.Portrait;
+                    return;
+                case ScreenOrientations.PortraitUpsideDown:
+                    Screen.orientation = ScreenOrientation.PortraitUpsideDown;
+                    return;
+                case ScreenOrientations.LandscapeLeft:
+                    Screen.orientation = ScreenOrientation.LandscapeLeft;
+                    return;
+                case ScreenOrientations.LandscapeRight:
+                    Screen.orientation = ScreenOrientation.LandscapeRight;
+                    return;
+            }
+
+            var autorotateToPortrait = (orientations & ScreenOrientations.Portrait) == ScreenOrientations.Portrait;
+            var autorotateToPortraitUpsideDown = (orientations & ScreenOrientations.PortraitUpsideDown) == ScreenOrientations.PortraitUpsideDown;
+            var autorotateToLandscapeLeft = (orientations & ScreenOrientations.LandscapeLeft) == ScreenOrientations.LandscapeLeft;
+            var autorotateToLandscapeRight = (orientations & ScreenOrientations.LandscapeRight) == ScreenOrientations.LandscapeRight;
+
+            if (Screen.orientation != ScreenOrientation.AutoRotation)
+            {
+                if (autorotateToPortrait)
+                    Screen.orientation = ScreenOrientation.Portrait;
+                else if (autorotateToLandscapeLeft)
+                    Screen.orientation = ScreenOrientation.LandscapeLeft;
+                else if (autorotateToLandscapeRight)
+                    Screen.orientation = ScreenOrientation.LandscapeRight;
+                else if (autorotateToPortraitUpsideDown)
+                    Screen.orientation = ScreenOrientation.PortraitUpsideDown;
+            }
+
+            Screen.autorotateToPortrait = autorotateToPortrait;
+            Screen.autorotateToPortraitUpsideDown = autorotateToPortraitUpsideDown;
+            Screen.autorotateToLandscapeLeft = autorotateToLandscapeLeft;
+            Screen.autorotateToLandscapeRight = autorotateToLandscapeRight;
+            Screen.orientation = ScreenOrientation.AutoRotation;
+        }
 
         internal static bool IsTablet()
         {
@@ -64,6 +108,7 @@ namespace Build1.UnityUI
 
         private static IUnityUIAgent InitializeAgent(IUnityUIAgent agent)
         {
+            agent.OnDeviceOrientationChanged += OnDeviceOrientationChangedHandler;
             agent.OnSomethingChanged += OnSomethingChangedHandler;
             return agent;
         }
@@ -72,6 +117,11 @@ namespace Build1.UnityUI
          * Event Handlers.
          */
 
+        private static void OnDeviceOrientationChangedHandler()
+        {
+            OnDeviceOrientationChanged?.Invoke();
+        }
+        
         private static void OnSomethingChangedHandler(bool screenOrientationChanged, bool screenResolutionChanged)
         {
             var interfaceTypeChanged = false;

@@ -13,5 +13,20 @@ namespace Build1.UnityUI
         {
             return orientation is ScreenOrientation.LandscapeLeft or ScreenOrientation.LandscapeRight;
         }
+
+        public static bool IsPortraitOrLandscape(this DeviceOrientation orientation)
+        {
+            return orientation is DeviceOrientation.Portrait or DeviceOrientation.PortraitUpsideDown or DeviceOrientation.LandscapeLeft or DeviceOrientation.LandscapeRight;
+        }
+
+        public static bool IsPortrait(this DeviceOrientation orientation)
+        {
+            return orientation is DeviceOrientation.Portrait or DeviceOrientation.PortraitUpsideDown;
+        }
+        
+        public static bool IsLandscape(this DeviceOrientation orientation)
+        {
+            return orientation is DeviceOrientation.LandscapeLeft or DeviceOrientation.LandscapeRight;
+        }
     }
 }

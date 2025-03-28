@@ -4,16 +4,19 @@ using UnityEngine;
 namespace Build1.UnityUI.Agents
 {
     [DisallowMultipleComponent]
-    internal class UnityUIAgentRuntime : MonoBehaviour, IUnityUIAgent
+    internal sealed class UnityUIAgentRuntime : MonoBehaviour, IUnityUIAgent
     {
+        public DeviceOrientation DeviceOrientation { get; private set; }
         public ScreenOrientation ScreenOrientation { get; private set; }
         public int               ScreenWidth       { get; private set; }
         public int               ScreenHeight      { get; private set; }
 
+        public event Action             OnDeviceOrientationChanged;
         public event Action<bool, bool> OnSomethingChanged;
 
         private void Awake()
         {
+            DeviceOrientation = Input.deviceOrientation;
             ScreenOrientation = Screen.orientation;
             ScreenWidth = Screen.width;
             ScreenHeight = Screen.height;
@@ -21,14 +24,20 @@ namespace Build1.UnityUI.Agents
 
         private void Update()
         {
-            var deviceOrientationChanged = false;
+            var screenOrientationChanged = false;
             var screenResolutionChanged = false;
             var safeAreaChanged = false;
-            
+
+            if (DeviceOrientation != Input.deviceOrientation)
+            {
+                DeviceOrientation = Input.deviceOrientation;
+                OnDeviceOrientationChanged?.Invoke();
+            }
+
             if (ScreenOrientation != Screen.orientation)
             {
                 ScreenOrientation = Screen.orientation;
-                deviceOrientationChanged = true;
+                screenOrientationChanged = true;
             }
 
             if (ScreenWidth != Screen.width || ScreenHeight != Screen.height)
@@ -37,16 +46,16 @@ namespace Build1.UnityUI.Agents
                 ScreenHeight = Screen.height;
                 screenResolutionChanged = true;
             }
-            
-            if (deviceOrientationChanged || screenResolutionChanged || safeAreaChanged)
-                OnSomethingChanged?.Invoke(deviceOrientationChanged, screenResolutionChanged);
+
+            if (screenOrientationChanged || screenResolutionChanged || safeAreaChanged)
+                OnSomethingChanged?.Invoke(screenOrientationChanged, screenResolutionChanged);
         }
 
         /*
          * Public.
          */
 
-        public virtual InterfaceType GetInterfaceType()
+        public InterfaceType GetInterfaceType()
         {
             var platform = Application.platform;
             var deviceType = SystemInfo.deviceType;
@@ -88,11 +97,6 @@ namespace Build1.UnityUI.Agents
                 default:
                     throw new ArgumentOutOfRangeException($"Unknown interface type. Platform: {platform} DeviceType: {deviceType}");
             }
-        }
-
-        public void Dispose()
-        {
-            OnSomethingChanged = null;
         }
 
         /*
