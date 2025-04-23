@@ -84,7 +84,7 @@ namespace Build1.UnityUI
             var autorotateToLandscapeLeft = (orientations & ScreenOrientations.LandscapeLeft) == ScreenOrientations.LandscapeLeft;
             var autorotateToLandscapeRight = (orientations & ScreenOrientations.LandscapeRight) == ScreenOrientations.LandscapeRight;
             
-            #if UNITY_ANDROID
+            #if UNITY_ANDROID && !UNITY_EDITOR
             
             if (!CheckScreenRotationAllowed())
             {
