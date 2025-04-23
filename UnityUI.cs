@@ -18,8 +18,14 @@ namespace Build1.UnityUI
         public static event Action                OnScreenOrientationChanged;
         public static event Action                OnScreenResolutionChanged;
         public static event Action                OnSomethingChanged;
-
+        
         private static readonly IUnityUIAgent _agent;
+        
+        #if UNITY_ANDROID
+        
+        private static AndroidJavaClass _androidUnityPlayerClass;
+        
+        #endif
 
         static UnityUI()
         {
@@ -28,6 +34,7 @@ namespace Build1.UnityUI
             _agent = InitializeAgent(UnityUIAgentEditor.Create());
 
             #else
+            
             var root = new GameObject("[UnityUI]");
             UnityEngine.Object.DontDestroyOnLoad(root);    
             
@@ -76,12 +83,46 @@ namespace Build1.UnityUI
             var autorotateToPortraitUpsideDown = (orientations & ScreenOrientations.PortraitUpsideDown) == ScreenOrientations.PortraitUpsideDown;
             var autorotateToLandscapeLeft = (orientations & ScreenOrientations.LandscapeLeft) == ScreenOrientations.LandscapeLeft;
             var autorotateToLandscapeRight = (orientations & ScreenOrientations.LandscapeRight) == ScreenOrientations.LandscapeRight;
+            
+            #if UNITY_ANDROID
+            
+            if (!CheckScreenRotationAllowed())
+            {
+                if (autorotateToPortrait)
+                    Screen.orientation = ScreenOrientation.Portrait;
+                else if (autorotateToLandscapeLeft)
+                    Screen.orientation = ScreenOrientation.LandscapeLeft;
+                else if (autorotateToLandscapeRight)
+                    Screen.orientation = ScreenOrientation.LandscapeRight;
+                else if (autorotateToPortraitUpsideDown)
+                    Screen.orientation = ScreenOrientation.PortraitUpsideDown;
+            }
+            
+            #endif
 
             Screen.autorotateToPortrait = autorotateToPortrait;
             Screen.autorotateToPortraitUpsideDown = autorotateToPortraitUpsideDown;
             Screen.autorotateToLandscapeLeft = autorotateToLandscapeLeft;
             Screen.autorotateToLandscapeRight = autorotateToLandscapeRight;
             Screen.orientation = ScreenOrientation.AutoRotation;
+        }
+        
+        public static bool CheckScreenRotationAllowed()
+        {
+            #if UNITY_ANDROID
+            
+            using var andClass = new AndroidJavaClass("com.unityutils.RotationLockUtil");
+            _androidUnityPlayerClass ??= new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            var activity = _androidUnityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity");
+            var allowAutorotation = andClass.CallStatic<int>("GetAutorotateSetting", activity);
+            var allowed = allowAutorotation != 0;
+            return allowed;
+            
+            #else
+
+            throw new NotImplementedException("CheckScreenRotationAllowed not implemented for the current platform");
+
+            #endif
         }
 
         internal static bool IsTablet()
