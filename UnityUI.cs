@@ -86,17 +86,15 @@ namespace Build1.UnityUI
             
             #if UNITY_ANDROID && !UNITY_EDITOR
             
-            if (!CheckScreenRotationAllowed())
-            {
-                if (autorotateToPortrait)
-                    Screen.orientation = ScreenOrientation.Portrait;
-                else if (autorotateToLandscapeLeft)
-                    Screen.orientation = ScreenOrientation.LandscapeLeft;
-                else if (autorotateToLandscapeRight)
-                    Screen.orientation = ScreenOrientation.LandscapeRight;
-                else if (autorotateToPortraitUpsideDown)
-                    Screen.orientation = ScreenOrientation.PortraitUpsideDown;
-            }
+            // Added for handling strange rotation restrictions on Android.
+            if (autorotateToPortrait)
+                Screen.orientation = ScreenOrientation.Portrait;
+            else if (autorotateToLandscapeLeft)
+                Screen.orientation = ScreenOrientation.LandscapeLeft;
+            else if (autorotateToLandscapeRight)
+                Screen.orientation = ScreenOrientation.LandscapeRight;
+            else if (autorotateToPortraitUpsideDown)
+                Screen.orientation = ScreenOrientation.PortraitUpsideDown;
             
             #endif
 
