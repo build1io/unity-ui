@@ -74,9 +74,12 @@ namespace Build1.UnityUI.Adaptive.Editor
                                 });
                             }
                         });
-            
+
                         if (EGUI.Button("-", EGUI.Size(30, 18), EGUI.Padding(new RectOffset(1, 1, 0, 2))).Clicked())
+                        {
                             ArrayUtility.Remove(ref targetObject.items, item);
+                            propertiesChanged = true;
+                        }
                     });
                     EGUI.Space(2);
                 }
