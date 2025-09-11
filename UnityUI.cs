@@ -104,7 +104,28 @@ namespace Build1.UnityUI
             Screen.autorotateToLandscapeRight = autorotateToLandscapeRight;
             Screen.orientation = ScreenOrientation.AutoRotation;
         }
-        
+
+        public static ScreenOrientations RestrictToCurrentOrientation()
+        {
+            switch (ScreenOrientation)
+            {
+                case ScreenOrientation.Portrait:
+                    SetAvailableOrientations(ScreenOrientations.Portrait);
+                    return ScreenOrientations.Portrait;
+                case ScreenOrientation.PortraitUpsideDown:
+                    SetAvailableOrientations(ScreenOrientations.PortraitUpsideDown);
+                    return ScreenOrientations.PortraitUpsideDown;
+                case ScreenOrientation.LandscapeLeft:
+                    SetAvailableOrientations(ScreenOrientations.LandscapeLeft);
+                    return ScreenOrientations.LandscapeLeft;
+                case ScreenOrientation.LandscapeRight:
+                    SetAvailableOrientations(ScreenOrientations.LandscapeRight);
+                    return ScreenOrientations.LandscapeRight;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         public static bool CheckScreenRotationAllowed()
         {
             #if UNITY_ANDROID
